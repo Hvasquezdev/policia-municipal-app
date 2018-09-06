@@ -1,5 +1,5 @@
 <template>
-  <section class="section has-background-white">
+  <section class="section has-background-light" id="directiva-section">
     <div class="container has-text-centered">
       <h2 class="title has-text-weight-normal">Directiva de la institución</h2>  
       <Divider />

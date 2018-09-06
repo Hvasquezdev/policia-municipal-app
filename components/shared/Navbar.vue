@@ -16,13 +16,13 @@
 
         <div id="navbarMenuTarget" class="navbar-menu" :class="{'is-active': navActive}">
           <div class="navbar-start">
-            <a class="navbar-item" href="#">
+            <a v-scroll-to="'#about-section'" class="navbar-item" href="#">
               Sobre nosotros
             </a>
-            <a class="navbar-item" href="#">
+            <a v-scroll-to="'#service-section'" class="navbar-item" href="#">
               Servicios
             </a>
-            <a class="navbar-item" href="#">
+            <a v-scroll-to="'#directiva-section'" class="navbar-item" href="#">
               Directiva
             </a>
             <a class="navbar-item" href="#">

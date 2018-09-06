@@ -22,6 +22,10 @@ module.exports = {
   ** Customize the progress bar color
   */
   loading: { color: 'hsl(141, 71%, 48%)' },
+  /**
+   * Plugins
+   */
+  plugins: ['~/plugins/vue-scrollto'],
   /*
   ** Build configuration
   */

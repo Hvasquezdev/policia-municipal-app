@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section" id="service-section">
     <div class="container has-text-centered">
       <h2 class="title has-text-weight-normal has-text-white">Servicios a la comunidad</h2>  
       
