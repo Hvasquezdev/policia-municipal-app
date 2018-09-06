@@ -1,6 +1,6 @@
 <template>
   <div id="home">
-    <section class="hero is-dark is-large top-banner">
+    <section class="hero is-dark is-large top-banner" id="top-banner">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title has-text-weight-bold is-size-2-tablet">
