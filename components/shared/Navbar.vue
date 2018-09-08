@@ -34,14 +34,14 @@
             <div class="navbar-item">
               <div class="field is-grouped">
                 <p class="control">
-                  <a class="bd-tw-button button is-warning is-outlined" href="#">
+                  <nuxt-link to="/login" class="bd-tw-button button is-success" href="#">
                     <span class="icon">
                       <i class="fas fa-sign-in-alt"></i>
                     </span>
                     <span>
                       Ingresar
                     </span>
-                  </a>
+                  </nuxt-link>
                 </p>
               </div>
             </div>
