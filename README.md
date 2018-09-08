@@ -1,6 +1,6 @@
 # policia-app-ssr
 
-> Policia web app with Nuxt.js
+> Policia web app with Nuxt.js Universal Vue.js Applications
 
 ## Build Setup
 
