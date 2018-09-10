@@ -9,10 +9,10 @@
         <nav class="breadcrumb has-bullet-separator is-medium" aria-label="breadcrumbs">
           <ul>
             <li><nuxt-link to="/" class="has-text-white" v-scroll-to="'#top-banner'">Inicio</nuxt-link></li>
-            <li><a class="has-text-white" v-scroll-to="'#about-section'">Sobre nosotros</a></li>
-            <li><a class="has-text-white" v-scroll-to="'#service-section'">Servicios</a></li>
-            <li><a class="has-text-white" v-scroll-to="'#directiva-section'">Directiva</a></li>
-            <li><a class="has-text-white">Multas</a></li>
+            <li><nuxt-link to="/" class="has-text-white" v-scroll-to="'#about-section'">Sobre nosotros</nuxt-link></li>
+            <li><nuxt-link to="/" class="has-text-white" v-scroll-to="'#service-section'">Servicios</nuxt-link></li>
+            <li><nuxt-link to="/" class="has-text-white" v-scroll-to="'#directiva-section'">Directiva</nuxt-link></li>
+            <li><nuxt-link to="/multas" class="has-text-white">Multas</nuxt-link></li>
           </ul>
         </nav>
 

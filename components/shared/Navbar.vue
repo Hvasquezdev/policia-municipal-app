@@ -16,18 +16,18 @@
 
         <div id="navbarMenuTarget" class="navbar-menu" :class="{'is-active': navActive}">
           <div class="navbar-start">
-            <a v-scroll-to="'#about-section'" class="navbar-item" href="#">
+            <nuxt-link to="/" v-scroll-to="'#about-section'" class="navbar-item" href="#">
               Sobre nosotros
-            </a>
-            <a v-scroll-to="'#service-section'" class="navbar-item" href="#">
+            </nuxt-link>
+            <nuxt-link to="/" v-scroll-to="'#service-section'" class="navbar-item" href="#">
               Servicios
-            </a>
-            <a v-scroll-to="'#directiva-section'" class="navbar-item" href="#">
+            </nuxt-link>
+            <nuxt-link to="/" v-scroll-to="'#directiva-section'" class="navbar-item" href="#">
               Directiva
-            </a>
-            <a class="navbar-item" href="#">
+            </nuxt-link>
+            <nuxt-link to="/multas" class="navbar-item">
               Multas
-            </a>
+            </nuxt-link>
           </div>
 
           <div class="navbar-end">
