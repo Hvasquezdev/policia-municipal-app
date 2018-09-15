@@ -3,11 +3,11 @@
 > Police web app with Nuxt.js Universal Vue.js Applications
 
 ###### TODO
-> Test and upload "Multas" module
-> Re-upload profile page
-> Router guards for protected pages
-> Add "Reseña Historica" text
-> Add images and names in directive section
+- [ ] \ Test and upload "Multas" module
+- [ ] \ Re-upload profile page
+- [ ] \ Router guards for protected pages
+- [ ] \ Add "Reseña Historica" text
+- [ ] \ Add images and names in directive section
 
 ## Build Setup
 
