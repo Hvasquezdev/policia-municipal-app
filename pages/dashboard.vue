@@ -1,7 +1,7 @@
 <template>
 <div class="section">
-  <div class="columns">
-    <div class="column is-4-tablet is-3-desktop is-2-widescreen has-background-light">
+  <div class="columns is-multiline">
+    <div class="column is-12-tablet is-3-desktop is-2-widescreen has-background-light">
       <nav class="menu">
         <p class="menu-label">
           Menu
@@ -35,13 +35,14 @@
         </ul>
       </nav>
     </div> 
-<nuxt-child />
+    <nuxt-child />
   </div>
 </div>
 </template>
 
 <script>
 export default {
+  middleware: 'authenticated',
   layout: 'default'
 }
 </script>

@@ -14,9 +14,13 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bulma": "^0.7.1",
+    "cookieparser": "^0.1.0",
     "font-awesome": "^4.7.0",
+    "js-cookie": "^2.2.0",
     "nuxt": "^1.4.2",
+    "vee-validate": "^2.1.0-beta.9",
     "vue-scrollto": "^2.11.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showPage === true">
     <div class="hero is-bold is-fullheight">
       <div class="bg-dark"></div>
       <div class="hero-body">
@@ -14,10 +14,17 @@
                   <img src="https://image.flaticon.com/icons/svg/149/149452.svg">
                 </figure>
 
-                <form>
+                <form @submit.prevent="login">
                   <div class="field">
                     <div class="control has-icons-left">
-                      <input type="email" placeholder="Ingresa tu email" class="input is-large" autofocus="">
+                      <input type="email" 
+                              placeholder="Ingresa tu email" 
+                              class="input is-large" 
+                              autofocus="" 
+                              v-model="user.email"
+                              v-validate="'required|email'"
+                              name="loginEmail"
+                              :class="{'is-danger': errors.first('loginEmail') || authStatus === 401}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                       </span>
@@ -26,7 +33,13 @@
 
                   <div class="field">
                     <div class="control has-icons-left">
-                      <input type="password" placeholder="Contraseña" class="input is-large">
+                      <input type="password" 
+                              placeholder="Contraseña" 
+                              class="input is-large" 
+                              v-model="user.password"
+                              v-validate="'required'"
+                              name="loginPass"
+                              :class="{'is-danger': errors.first('loginPass') || authStatus === 401}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                       </span>
@@ -34,7 +47,7 @@
                   </div>
 
                   <div class="field">
-                    <button class="button is-block is-success is-medium is-fullwidth">
+                    <button class="button is-block is-success is-medium is-fullwidth" :disabled="errors.any() || !isValid || authStatus == 'loading'">
                       Iniciar Sesion
                     </button>
                   </div>
@@ -54,8 +67,55 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
+
 export default {
-  layout: 'login'
+  created() {
+    let token = Cookie.get('user-token')
+    let tokenData = Cookie.get('user-data')
+    if(typeof tokenData !== 'undefined' || typeof token !== 'undefined') {
+      this.$router.push('/')
+    } else {
+      this.showPage = true
+    }
+  },
+
+  layout: 'login',
+
+  data() {
+    return {
+      user: {
+        email: '',
+        password: ''
+      },
+      showPage: false
+    }
+  },
+
+  methods: {
+    login() {
+      this.$validator.validateAll().then(res => {
+        if(!res) {
+          alert('Rellene todos los campos')
+          return
+        } 
+        this.$store.dispatch('AUTH_REQUEST', {email: this.user.email, password: this.user.password}).then(() => {
+          if(this.authStatus === 'success') {
+            this.$router.push('/')
+          }
+        })
+      })
+    }
+  },
+
+  computed: {
+    isValid() {
+      return this.user.email && this.user.password
+    },
+    authStatus() {
+      return this.$store.getters.authStatus
+    }    
+  }
 }
 </script>
 

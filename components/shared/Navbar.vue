@@ -31,9 +31,25 @@
           </div>
 
           <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
+            <div class="navbar-item has-dropdown is-hoverable" v-if="tokenData">
+              <a class="navbar-link">
+                {{ tokenData.nombre }}
+              </a>
+
+              <div class="navbar-dropdown is-right">
+                <nuxt-link to="/dashboard" class="navbar-item">
+                  Perfil
+                </nuxt-link>
+                <hr class="navbar-divider">
+                <a class="navbar-item has-text-danger" @click="logOut">
+                  Cerrar Cesion
+                </a>
+              </div>
+            </div>
+
+            <div class="navbar-item" v-if="!tokenData">
+              <div class="field">
+                <div class="control">
                   <nuxt-link to="/login" class="bd-tw-button button is-success" href="#">
                     <span class="icon">
                       <i class="fas fa-sign-in-alt"></i>
@@ -42,7 +58,7 @@
                       Ingresar
                     </span>
                   </nuxt-link>
-                </p>
+                </div>
               </div>
             </div>
           </div>
@@ -53,11 +69,37 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
+import { mapGetters } from 'vuex'
+
 export default {
+  mounted() {
+    let tokenString = Cookie.get('user-data')
+      if(typeof tokenString !== 'undefined'){
+        const tokenData = JSON.parse(tokenString)
+        this.setTokenData(tokenData)
+      } else {
+        this.setTokenData(null)
+      }
+  },
   data() {
     return {
-      navActive: false
+      navActive: false,
+      navStatus: false
     }
+  },
+  methods: {
+    setTokenData(tokenData) { this.$store.dispatch('TOKEN_DATA', tokenData) },
+    logOut() { 
+      this.$store.dispatch('AUTH_LOGOUT').then(() => {
+        this.$router.push('/login')
+      }) 
+    }
+  },
+  computed: {
+    ...mapGetters({
+      tokenData: 'stateProfile'
+    })
   }
 }
 </script>

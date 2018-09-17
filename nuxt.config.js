@@ -25,11 +25,18 @@ module.exports = {
   /**
    * Plugins
    */
-  plugins: ['~/plugins/vue-scrollto'],
+  plugins: [
+    '~/plugins/vue-scrollto',
+    '~/plugins/vee-validate'
+  ],
   /*
   ** Build configuration
   */
   build: {
+    /**
+     * Importing axios
+     */
+    vendor: ['axios'],
     /*
     ** Run ESLint on save
     */

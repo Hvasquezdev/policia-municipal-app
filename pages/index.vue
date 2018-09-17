@@ -32,9 +32,6 @@ export default {
     AboutComponent,
     ServicesComponent,
     DirectivaComponent
-  },
-  methods: {
-
   }
 }
 </script>

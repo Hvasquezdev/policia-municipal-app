@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="showPage === true">
     <div class="hero is-bold is-fullheight">
       <div class="bg-dark"></div>
       <div class="hero-body">
@@ -25,17 +25,30 @@
                   <img src="https://image.flaticon.com/icons/svg/149/149452.svg">
                 </figure>
 
-                <form>
+                <form @submit.prevent="register">
                   <div class="field is-grouped">
                     <div class="control is-expanded has-icons-left">
-                      <input type="text" placeholder="Nombre" class="input is-medium" autofocus="">
+                      <input type="text" 
+                              placeholder="Nombre" 
+                              class="input is-medium" 
+                              autofocus="" 
+                              v-model="user.nombre"
+                              v-validate="'required|alpha'" 
+                              name="nombre" 
+                              :class="{'is-danger': errors.first('nombre')}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                       </span>
                     </div>
 
                     <div class="control is-expanded has-icons-left">
-                      <input type="text" placeholder="Apellido" class="input is-medium">
+                      <input type="text" 
+                              placeholder="Apellido" 
+                              class="input is-medium" 
+                              v-model="user.apellido"
+                              v-validate="'required|alpha'" 
+                              name="apellido" 
+                              :class="{'is-danger': errors.first('apellido')}">
                       <span class="icon is-small is-left">
                         <i class="far fa-user"></i>
                       </span>
@@ -44,32 +57,69 @@
 
                   <div class="field">
                     <div class="control has-icons-left">
-                      <input type="email" placeholder="Ingresa tu email" class="input is-medium">
+                      <input type="email" 
+                              placeholder="Ingresa tu email" 
+                              class="input is-medium" 
+                              v-model="user.email"
+                              v-validate="'required|email'" 
+                              name="email" 
+                              :class="{'is-danger': errors.first('email')}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-envelope"></i>
                       </span>
                     </div>
                   </div>
 
-                  <div class="field">
-                    <div class="control has-icons-left">
-                      <input type="number" placeholder="Cedula de identidad" class="input is-medium">
+                  <div class="field is-grouped">
+                    <div class="control is-expanded has-icons-left">
+                      <input type="number" 
+                              placeholder="Cedula de identidad" 
+                              class="input is-medium" 
+                              v-model="user.cedula"
+                              v-validate="'required|numeric'"
+                              name="cedula"
+                              :class="{'is-danger': errors.first('cedula')}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-address-card"></i>
+                      </span>
+                    </div>
+
+                    <div class="control is-expanded has-icons-left">
+                      <input type="number" 
+                              placeholder="Numero de telefono" 
+                              class="input is-medium" 
+                              v-model="user.telefono"
+                              v-validate="'required|min:7|numeric'"
+                              name="telefono"
+                              :class="{'is-danger': errors.first('telefono')}">
+                      <span class="icon is-small is-left">
+                        <i class="fas fa-phone"></i>
                       </span>
                     </div>
                   </div>
 
                   <div class="field is-grouped">
                     <div class="control is-expanded has-icons-left">
-                      <input type="number" placeholder="Licencia de conducir" class="input is-medium">
+                      <input type="number" 
+                              placeholder="Licencia de conducir" 
+                              class="input is-medium" 
+                              v-model="user.licencia"
+                              v-validate="'required|numeric'"
+                              name="licencia"
+                              :class="{'is-danger': errors.first('licencia')}">
                       <span class="icon is-small is-left">
                         <i class="far fa-address-card"></i>
                       </span>
                     </div>
 
                     <div class="control is-expanded has-icons-left">
-                      <input type="text" placeholder="Placa del vehiculo" class="input is-medium">
+                      <input type="text" 
+                              placeholder="Placa del vehiculo" 
+                              class="input is-medium" 
+                              v-model="user.placa"
+                              v-validate="'required|alpha_num'"
+                              name="placa"
+                              :class="{'is-danger': errors.first('placa')}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-car"></i>
                       </span>
@@ -78,7 +128,13 @@
 
                   <div class="field">
                     <div class="control has-icons-left">
-                      <input type="password" placeholder="Contraseña" class="input is-medium">
+                      <input type="password" 
+                              placeholder="Contraseña" 
+                              class="input is-medium" 
+                              v-model="user.pass"
+                              v-validate="'required|min:6'"
+                              name="password"
+                              :class="{'is-danger': errors.first('password')}">
                       <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                       </span>
@@ -86,7 +142,7 @@
                   </div>
 
                   <div class="field">
-                    <button class="button is-block is-success is-fullwidth">
+                    <button class="button is-block is-success is-fullwidth" :disabled="errors.any() || !isValid">
                       Registrarse
                     </button>
                   </div>
@@ -105,8 +161,83 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
+import axios from 'axios'
+
 export default {
-  layout: 'login'
+  created() {
+    let token = Cookie.get('user-token')
+    let tokenData = Cookie.get('user-data')
+    if(typeof tokenData !== 'undefined' || typeof token !== 'undefined') {
+      this.$router.push('/')
+    } else {
+      this.showPage = true
+    }
+  },
+
+  layout: 'login',
+
+  data() {
+    return {
+      showPage: false,
+      user: {
+        id_user: 0,
+        nombre: '',
+        apellido: '',
+        rol: 'Usuario',
+        cedula: '',
+        email: '',
+        licencia: null,
+        placa: '',
+        telefono: null,
+        pass: ''
+      },
+    }
+  },
+
+  methods: {
+    register() {
+      this.$validator.validateAll().then(res => {
+
+        if (!res) return;
+
+        axios.post('http://localhost:3001/signUp', this.user).then(response => {
+
+          if(response.status === 200) {
+
+            this.user = {
+              id_user: 0,
+              nombre: '',
+              apellido: '',
+              rol: 'Usuario',
+              cedula: '',
+              email: '',
+              licencia: null,
+              placa: '',
+              telefono: null,
+              pass: ''
+            };
+            
+            setTimeout(() => {
+              this.$router.push('/login');
+            }, 1500);
+            
+          }
+
+        }).catch(error => {
+
+          console.error(error) // For debugging purposes
+
+        });
+      });
+    }
+  },
+
+  computed: {
+    isValid() {
+      return this.user.nombre && this.user.apellido && this.user.email && this.user.telefono && this.user.cedula && this.user.licencia && this.user.placa && this.user.pass
+    }
+  }
 }
 </script>
 

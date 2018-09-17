@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <div class="column is-fullwidth">
     <h1 class="title">Lista de Usuarios</h1>
     <nav class="level">
       <div class="level-left">
@@ -36,7 +36,7 @@
           <th>id</th>
           <th>Nombre</th>
           <th>Apellido</th>
-          <th>Email</th>
+          <th class="is-hidden-mobile">Email</th>
           <th>Cedula</th>
           <th>Opciones</th>
         </tr>
@@ -47,7 +47,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
-          <th>Cedula</th>
+          <th class="is-hidden-mobile">Cedula</th>
           <th>Opciones</th>
         </tr>
       </tfoot>
@@ -62,7 +62,7 @@
           <td>
             Vasquez
           </td>
-          <td>
+          <td class="is-hidden-mobile">
             <code>Hvasquezdev@gmail.com</code>
           </td>
           <td>
