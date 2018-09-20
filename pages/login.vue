@@ -24,7 +24,10 @@
                               v-model="user.email"
                               v-validate="'required|email'"
                               name="loginEmail"
-                              :class="{'is-danger': errors.first('loginEmail') || authStatus === 401}">
+                              :class="{
+                                'is-danger': errors.first('loginEmail') || authStatus === 401,
+                                'is-success': authStatus == 'success'}"
+                              :disabled="authStatus == 'loading' || authStatus == 'success'">
                       <span class="icon is-small is-left">
                         <i class="fas fa-user"></i>
                       </span>
@@ -39,7 +42,10 @@
                               v-model="user.password"
                               v-validate="'required'"
                               name="loginPass"
-                              :class="{'is-danger': errors.first('loginPass') || authStatus === 401}">
+                              :class="{
+                                'is-danger': errors.first('loginPass') || authStatus === 401,
+                                'is-success': authStatus == 'success'}"
+                              :disabled="authStatus == 'loading' || authStatus == 'success'">
                       <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                       </span>
@@ -47,10 +53,18 @@
                   </div>
 
                   <div class="field">
-                    <button class="button is-block is-success is-medium is-fullwidth" :disabled="errors.any() || !isValid || authStatus == 'loading'">
-                      Iniciar Sesion
+                    <button class="button is-block is-success is-medium is-fullwidth" 
+                            :disabled="errors.any() || !isValid || authStatus === 'loading' || authStatus === 'success'">
+                      <span v-if="authStatus !== 'loading' && authStatus !== 'success'">Iniciar Sesion</span>
+                      <i class="fas fa-spinner fa-pulse" v-if="authStatus == 'loading'"></i>
+                      <span v-if="authStatus == 'success'">
+                        <i class="far fa-check-circle"></i>
+                        Ingresando...
+                      </span>
                     </button>
                   </div>
+
+                  <p class="help is-danger subtitle is-5" v-if="loginError">{{ loginError.message }}</p>
                 </form>
               </div>
                 <p class="has-text-weight-semibold">
@@ -88,6 +102,7 @@ export default {
         email: '',
         password: ''
       },
+      loginError: '',
       showPage: false
     }
   },
@@ -101,10 +116,15 @@ export default {
         } 
         this.$store.dispatch('AUTH_REQUEST', {email: this.user.email, password: this.user.password}).then(() => {
           if(this.authStatus === 'success') {
-            this.$router.push('/')
+            this.loginError = '';
+            setTimeout(() => {
+              this.$router.push('/');
+            }, 2000);
           }
+        }).catch(err => {
+          this.loginError = err;
         })
-      })
+      });
     }
   },
 

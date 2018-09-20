@@ -142,10 +142,21 @@
                   </div>
 
                   <div class="field">
-                    <button class="button is-block is-success is-fullwidth" :disabled="errors.any() || !isValid">
-                      Registrarse
+                    <button class="button is-block is-success is-medium is-fullwidth" 
+                            :disabled="errors.any() || !isValid || authStatus === 'loading' || authStatus === 'register_success'">
+                      <span v-if="authStatus !== 'loading' && authStatus !== 'register_success'">Registrarse</span>
+                      <i class="fas fa-spinner fa-pulse" v-if="authStatus == 'loading'"></i>
+                      <span v-if="authStatus == 'register_success'">
+                        <i class="far fa-check-circle"></i>
+                        Registro exitoso, procesando...
+                      </span>
                     </button>
                   </div>
+
+                  <hr v-if="registerError">
+                  <p class="help is-danger subtitle is-5 has-text-weight-normal" v-if="registerError">
+                    {{ registerError.message }}
+                  </p>
                 </form>
               </div>
                 <p class="has-text-weight-semibold">
@@ -192,6 +203,7 @@ export default {
         telefono: null,
         pass: ''
       },
+      registerError: ''
     }
   },
 
@@ -199,35 +211,20 @@ export default {
     register() {
       this.$validator.validateAll().then(res => {
 
-        if (!res) return;
+        if (!res) { 
+          alert('Rellene todos los campos');
+          return;
+        }
 
-        axios.post('http://localhost:3001/signUp', this.user).then(response => {
-
-          if(response.status === 200) {
-
-            this.user = {
-              id_user: 0,
-              nombre: '',
-              apellido: '',
-              rol: 'Usuario',
-              cedula: '',
-              email: '',
-              licencia: null,
-              placa: '',
-              telefono: null,
-              pass: ''
-            };
-            
+        this.$store.dispatch('REGISTER_USER', this.user).then(() => {
+          if(this.authStatus === 'register_success') {
+            this.registerError = '';
             setTimeout(() => {
               this.$router.push('/login');
-            }, 1500);
-            
+            }, 2000);
           }
-
-        }).catch(error => {
-
-          console.error(error) // For debugging purposes
-
+        }).catch(err => {
+          this.registerError = err;
         });
       });
     }
@@ -236,7 +233,10 @@ export default {
   computed: {
     isValid() {
       return this.user.nombre && this.user.apellido && this.user.email && this.user.telefono && this.user.cedula && this.user.licencia && this.user.placa && this.user.pass
-    }
+    },
+    authStatus() {
+      return this.$store.getters.authStatus
+    } 
   }
 }
 </script>

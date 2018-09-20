@@ -3,7 +3,7 @@
     <div class="level">
       <div class="level-left">
         <h1 class="subtitle is-3">
-          <span class="has-text-grey-light">Hola </span> <strong>Nombre Apellido </strong> <span class="tag is-warning">Administrador</span>
+          <span class="has-text-grey-light">Hola </span> <strong>{{ profileData.nombre }} </strong> <span class="tag is-warning">{{ profileData.rol }}</span>
         </h1>
       </div>
     </div>
@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -91,6 +93,11 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    ...mapGetters({
+      profileData: 'stateProfile'
+    })
   }
 }
 </script>
