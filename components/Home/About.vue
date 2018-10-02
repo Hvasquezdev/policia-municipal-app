@@ -1,10 +1,10 @@
 <template>
-  <section class="section has-background-light" id="about-section">
+  <section class="section" id="about-section">
     <div class="container">
       <div class="columns is-multiline">
 
         <div class="column is-12">
-          <div class="blog-card is-width-100 border-right">
+          <div class="blog-card is-width-100">
             <div class="meta">
               <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-1.jpg)"></div>
             </div>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="column is-12">
-          <div class="blog-card alt is-width-100 border-left">
+          <div class="blog-card alt is-width-100">
             <div class="meta">
               <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
             </div>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="column is-12">
-          <div class="blog-card is-width-100 border-right">
+          <div class="blog-card is-width-100">
             <div class="meta">
               <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
             </div>
@@ -73,17 +73,14 @@ $color_prime: hsl(48, 100%, 67%);
 $color_grey: #e2e2e2;
 $color_grey_dark: #a2a2a2;
 
+.section {
+  background: radial-gradient(circle,#d7d7d7,#d7d7d7 1px,#fff 0,#fff);
+  background-size: 28px 28px;
+}
+
 .is-width-100 {
   width: 100%;
   min-width: 100% !important;
-}
-
-.border-right {
-  border-right: 1px solid $color_prime;
-}
-
-.border-left {
-  border-left: 1px solid $color_prime;
 }
 
 .blog-card {
@@ -91,6 +88,7 @@ $color_grey_dark: #a2a2a2;
   flex-direction: column;
   min-height: 200px;
   margin: 1rem auto;
+  border: 1px solid $color_prime;
   box-shadow: 0 3px 7px -1px rgba(#000, .1);
   margin-bottom: 1.6%;
   background: $color_white;

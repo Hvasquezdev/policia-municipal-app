@@ -1,5 +1,5 @@
 <template>
-  <section class="section" id="service-section">
+  <section class="section has-background-dark" id="service-section">
     <div class="container has-text-centered">
       <h2 class="title has-text-weight-normal has-text-white">Servicios a la comunidad</h2>  
       
@@ -96,9 +96,9 @@
 
 <style lang="scss" scoped>
 .section {
-  background-image: url('~/assets/services-fondo.jpg');
-  background-size: cover;
-  background-attachment: fixed;
+  // background-image: url('~/assets/services-fondo.jpg');
+  // background-size: cover;
+  // background-attachment: fixed;
 }
 
 .box-service {

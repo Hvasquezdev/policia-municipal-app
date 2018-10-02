@@ -1,5 +1,5 @@
 <template>
-  <section class="section has-background-light" id="directiva-section">
+  <section class="section" id="directiva-section">
     <div class="container has-text-centered">
       <h2 class="title has-text-weight-normal">Directiva de la institución</h2>  
       <Divider />
@@ -116,3 +116,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#directiva-section {
+  background: radial-gradient(circle,#d7d7d7,#d7d7d7 1px,#fff 0,#fff) !important;
+  background-size: 28px 28px !important;
+}
+</style>
