@@ -75,12 +75,12 @@ import { mapGetters } from 'vuex'
 export default {
   mounted() {
     let tokenString = Cookie.get('user-data')
-      if(typeof tokenString !== 'undefined'){
-        const tokenData = JSON.parse(tokenString)
-        this.setTokenData(tokenData)
-      } else {
-        this.setTokenData(null)
-      }
+    if(typeof tokenString !== 'undefined'){
+      const tokenData = JSON.parse(tokenString)
+      this.setTokenData(tokenData)
+    } else {
+      this.setTokenData(null)
+    }
   },
   data() {
     return {

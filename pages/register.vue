@@ -1,6 +1,6 @@
 <template>
-  <div v-if="showPage === true">
-    <div class="hero is-bold is-fullheight">
+  <div>
+    <div class="hero is-bold is-fullheight" v-if="!tokenData">
       <div class="bg-dark"></div>
       <div class="hero-body">
         <div class="container">
@@ -168,21 +168,29 @@
         </div>
       </div>
     </div>
+
+    <spinner-component v-if="tokenData"/>
   </div>
 </template>
 
 <script>
+import SpinnerComponent from '@/components/Spinner'
 import Cookie from 'js-cookie'
 import axios from 'axios'
 
 export default {
-  created() {
-    let token = Cookie.get('user-token')
-    let tokenData = Cookie.get('user-data')
-    if(typeof tokenData !== 'undefined' || typeof token !== 'undefined') {
-      this.$router.push('/')
+  components: {
+    SpinnerComponent
+  },
+
+  layout: 'login',
+
+  mounted() {
+    let tokenString = Cookie.get('user-data')
+    if(typeof tokenString !== 'undefined'){
+      this.$router.push('/');
     } else {
-      this.showPage = true
+      this.tokenData = false;
     }
   },
 
@@ -190,7 +198,7 @@ export default {
 
   data() {
     return {
-      showPage: false,
+      tokenData: true,
       user: {
         id_user: 0,
         nombre: '',
