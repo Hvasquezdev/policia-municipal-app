@@ -22,7 +22,7 @@
           </div>
         </div>
 
-        <div class="column is-4">
+        <div class="column is-4-widescreen is-12-mobile is-6-tablet">
           <div class="box box-service">
             <article class="media">
               <div class="media-left">
@@ -31,7 +31,7 @@
               <div class="media-content">
                 <div class="content">
                   <p>
-                    Prevenir la comisión de delitos.
+                    Facilitar la resolución de conflictos mediante el diálogo, la mediación y la conciliación.
                   </p>
                 </div>
               </div>
@@ -82,7 +82,7 @@
               <div class="media-content">
                 <div class="content">
                   <p>
-                    Facilitar la resolución de conflictos mediante el diálogo, la mediación y la conciliación.
+                    Prevenir la comisión de delitos.
                   </p>
                 </div>
               </div>
@@ -95,12 +95,6 @@
 </template>
 
 <style lang="scss" scoped>
-.section {
-  // background-image: url('~/assets/services-fondo.jpg');
-  // background-size: cover;
-  // background-attachment: fixed;
-}
-
 .box-service {
   cursor: pointer;
   box-shadow: 0 1px 5px rgba(10, 10, 10, 0.15);
