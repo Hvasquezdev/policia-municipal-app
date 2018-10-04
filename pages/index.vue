@@ -15,7 +15,7 @@
 
     <AboutComponent />
 
-    <ServicesComponent />
+    <ContactComponent />
 
     <DirectivaComponent />
 
@@ -24,13 +24,13 @@
 
 <script>
 import AboutComponent from '@/components/Home/About'
-import ServicesComponent from '@/components/Home/Services'
+import ContactComponent from '@/components/Home/Contact'
 import DirectivaComponent from '@/components/Home/Directiva';
 
 export default {
   components: {
     AboutComponent,
-    ServicesComponent,
+    ContactComponent,
     DirectivaComponent
   }
 }

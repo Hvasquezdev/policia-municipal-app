@@ -1,38 +1,51 @@
 <template>
   <div class="column is-fullwidth">
-    <h1 class="title" v-if="user.data.ID">Editando a {{ user.data.nombre }} {{ user.data.apellido }} <span class="tag is-warning">{{ user.rol.nombre }}</span></h1>
+    <h1 class="title" v-if="user.data.ID">Editando a {{ user.data.nombre }} {{ user.data.apellido }} 
+      <span class="tag" :class="{'is-warning': user.rol.nombre === 'Administrador', 'is-success': user.rol.nombre === 'Usuario'}">
+        {{ user.rol.nombre }}
+      </span>
+    </h1>
 
     <form @submit.prevent="editUser" v-if="user.data.ID">
       <div class="field is-grouped">
         <div class="control is-expanded has-icons-left">
-          <input type="text" 
-                  placeholder="Nombre" 
-                  class="input is-medium is-rounded" 
-                  autofocus="" 
-                  v-model="user.data.nombre"
-                  v-validate="'required|alpha'" 
-                  name="nombre" 
-                  :class="{'is-danger': errors.first('nombre')}">
-          <span class="icon is-small is-left">
-            <i class="fas fa-user"></i>
-          </span>
+          <label class="label">Nombre</label>
+          <div class="control">
+            <input type="text" 
+                    placeholder="Nombre" 
+                    class="input is-medium is-rounded" 
+                    autofocus="" 
+                    v-model="user.data.nombre"
+                    v-validate="'required|alpha'" 
+                    name="nombre" 
+                    :class="{'is-danger': errors.first('nombre')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-user"></i>
+            </span>
+          </div>
         </div>
 
         <div class="control is-expanded has-icons-left">
-          <input type="text" 
-                  placeholder="Apellido" 
-                  class="input is-medium is-rounded" 
-                  v-model="user.data.apellido"
-                  v-validate="'required|alpha'" 
-                  name="apellido" 
-                  :class="{'is-danger': errors.first('apellido')}">
-          <span class="icon is-small is-left">
-            <i class="far fa-user"></i>
-          </span>
+          <label class="label">Apellido</label>
+          <div class="control">
+            <input type="text" 
+                    placeholder="Apellido" 
+                    class="input is-medium is-rounded" 
+                    v-model="user.data.apellido"
+                    v-validate="'required|alpha'" 
+                    name="apellido" 
+                    :class="{'is-danger': errors.first('apellido')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="far fa-user"></i>
+            </span>
+          </div>
         </div>
       </div>
 
       <div class="field">
+        <label class="label">Correo Electronico</label>
         <div class="control has-icons-left">
           <input type="email" 
                   placeholder="Ingresa tu email" 
@@ -40,7 +53,8 @@
                   v-model="user.data.email"
                   v-validate="'required|email'" 
                   name="email" 
-                  :class="{'is-danger': errors.first('email')}">
+                  :class="{'is-danger': errors.first('email')}"
+                  :disabled="!editValues">
           <span class="icon is-small is-left">
             <i class="fas fa-envelope"></i>
           </span>
@@ -49,63 +63,117 @@
 
       <div class="field is-grouped">
         <div class="control is-expanded has-icons-left">
-          <input type="number" 
-                  placeholder="Cedula de identidad" 
-                  class="input is-medium is-rounded" 
-                  v-model="user.data.cedula"
-                  v-validate="'required|numeric'"
-                  name="cedula"
-                  :class="{'is-danger': errors.first('cedula')}">
-          <span class="icon is-small is-left">
-            <i class="fas fa-address-card"></i>
-          </span>
+          <label class="label">Cedula</label>
+          <div class="control">
+            <input type="number" 
+                    placeholder="Cedula de identidad" 
+                    class="input is-medium is-rounded" 
+                    v-model="user.data.cedula"
+                    v-validate="'required|numeric'"
+                    name="cedula"
+                    :class="{'is-danger': errors.first('cedula')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-address-card"></i>
+            </span>
+          </div>
         </div>
 
         <div class="control is-expanded has-icons-left">
-          <input type="number" 
-                  placeholder="Numero de telefono" 
-                  class="input is-medium is-rounded" 
-                  v-model="user.credentials.telefono"
-                  v-validate="'required|min:7|numeric'"
-                  name="telefono"
-                  :class="{'is-danger': errors.first('telefono')}">
-          <span class="icon is-small is-left">
-            <i class="fas fa-phone"></i>
-          </span>
+          <label class="label">Numero de telefono</label>
+          <div class="control">
+            <input type="number" 
+                    placeholder="Numero de telefono" 
+                    class="input is-medium is-rounded" 
+                    v-model="user.credentials.telefono"
+                    v-validate="'required|min:7|numeric'"
+                    name="telefono"
+                    :class="{'is-danger': errors.first('telefono')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-phone"></i>
+            </span>
+          </div>
         </div>
       </div>
 
       <div class="field is-grouped">
         <div class="control is-expanded has-icons-left">
-          <input type="number" 
-                  placeholder="Licencia de conducir" 
-                  class="input is-medium is-rounded" 
-                  v-model="user.credentials.licencia"
-                  v-validate="'required|numeric'"
-                  name="licencia"
-                  :class="{'is-danger': errors.first('licencia')}">
-          <span class="icon is-small is-left">
-            <i class="far fa-address-card"></i>
-          </span>
+          <label class="label">Licencia de conducir</label>
+          <div class="control">
+            <input type="number" 
+                    placeholder="Licencia de conducir" 
+                    class="input is-medium is-rounded" 
+                    v-model="user.credentials.licencia"
+                    v-validate="'required|numeric'"
+                    name="licencia"
+                    :class="{'is-danger': errors.first('licencia')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="far fa-address-card"></i>
+            </span>
+          </div>
         </div>
 
         <div class="control is-expanded has-icons-left">
-          <input type="text" 
-                  placeholder="Placa del vehiculo" 
-                  class="input is-medium is-rounded" 
-                  v-model="user.credentials.placa"
-                  v-validate="'required|alpha_num'"
-                  name="placa"
-                  :class="{'is-danger': errors.first('placa')}">
-          <span class="icon is-small is-left">
-            <i class="fas fa-car"></i>
-          </span>
+          <label class="label">Placa del vehiculo</label>
+          <div class="control">
+            <input type="text" 
+                    placeholder="Placa del vehiculo" 
+                    class="input is-medium is-rounded" 
+                    v-model="user.credentials.placa"
+                    v-validate="'required|alpha_num'"
+                    name="placa"
+                    :class="{'is-danger': errors.first('placa')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-car"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control is-expanded has-icons-left">
+          <label class="label">Contraseña</label>
+          <div class="control">
+            <input type="password" 
+                    placeholder="Contraseña" 
+                    class="input is-medium is-rounded" 
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="control is-expanded has-icons-left">
+          <div class="control">
+            <label class="label">Tipo de usuario</label>
+            <div class="select is-rounded is-medium">
+              <select :disabled="!editValues">
+                <option :value="user.rol.nombre">{{ user.rol.nombre }}</option>
+                <option value="Usuario" v-if="user.rol.nombre !== 'Usuario'">Usuario</option>
+                <option value="Administrador" v-if="user.rol.nombre !== 'Administrador'">Administrador</option>
+              </select>
+              <span class="icon is-small is-left">
+                <i class="fas fa-car"></i>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="field">
+        <a class="button is-block is-warning is-medium is-fullwidth" 
+                v-if="!editValues"
+                @click="editValues = !editValues">
+          <span>Editar Campos</span>
+        </a>
+
         <button class="button is-block is-success is-medium is-fullwidth" 
-                :disabled="errors.any() || !isValid">
+                :disabled="errors.any() || !isValid"
+                v-if="editValues">
           <span>Guardar Cambios</span>
         </button>
       </div>
@@ -157,7 +225,8 @@ export default {
           "users_ID":null
         }
       },
-      formError: ''
+      formError: '',
+      editValues: false
     }
   },
 
@@ -193,6 +262,10 @@ form {
     &:active {
       box-shadow: none !important;
     }
+  }
+
+  .label {
+    padding-left: 5px !important;
   }
 }
 </style>
