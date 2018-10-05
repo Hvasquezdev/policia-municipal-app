@@ -169,13 +169,19 @@
         </div>
       </div>
 
+      <hr>
+
       <div class="field">
         <div class="control has-icons-left">
-          <label class="label">Contraseña</label>
+          <label class="label">Nueva Contraseña</label>
           <div class="control">
             <input type="password" 
-                    placeholder="Contraseña" 
+                    placeholder="Escribe tu nueva contraseña" 
                     class="input is-medium is-rounded" 
+                    v-validate="'required|alpha_num|min:7'"
+                    v-model="user.data.newPass"
+                    name="newPass"
+                    :class="{'is-danger': errors.first('newPass')}"
                     :disabled="!editValues">
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
@@ -185,17 +191,49 @@
       </div>
 
       <div class="field">
+        <div class="control has-icons-left">
+          <label class="label">Repite la nueva Contraseña</label>
+          <div class="control">
+            <input type="password" 
+                    placeholder="Repite tu nueva contraseña" 
+                    class="input is-medium is-rounded" 
+                    v-model="confirmNewPass"
+                    v-validate="'required|alpha_num|min:7'"
+                    name="confirmNewPass"
+                    :class="{'is-danger': confirmNewPass !== user.data.newPass && confirmNewPass || errors.first('confirmNewPass')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
         <a class="button is-block is-warning is-medium is-fullwidth" 
                 v-if="!editValues"
                 @click="editValues = !editValues">
           <span>Editar Campos</span>
         </a>
 
-        <button class="button is-block is-success is-medium is-fullwidth" 
-                :disabled="errors.any() || !isValid"
-                v-if="editValues">
-          <span>Guardar Cambios</span>
-        </button>
+        <div class="control">
+          <button class="button is-block is-success is-medium" 
+                  :disabled="errors.any() || !isValid"
+                  v-if="editValues">
+            <span>Guardar Cambios</span>
+          </button>
+        </div>
+
+
+        <div class="control">
+          <a class="button is-block is-warning is-medium" 
+                  :disabled="errors.any() || !isValid"
+                  v-if="editValues"
+                  @click="editValues = !editValues">
+            <span>Cancelar</span>
+          </a>
+        </div>
+
       </div>
 
       <hr v-if="formError">
@@ -230,6 +268,7 @@ export default {
           "apellido":"",
           "email":"",
           "pass":"",
+          "newPass": "",
           "cedula":null
         },
         "rol":{
@@ -247,7 +286,8 @@ export default {
         }
       },
       formError: '',
-      editValues: false
+      editValues: false,
+      confirmNewPass: ""
     }
   },
 

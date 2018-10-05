@@ -173,18 +173,31 @@
         </div>
       </div>
 
-      <div class="field">
+      <div class="field is-grouped">
         <a class="button is-block is-warning is-medium is-fullwidth" 
                 v-if="!editValues"
                 @click="editValues = !editValues">
           <span>Editar Campos</span>
         </a>
 
-        <button class="button is-block is-success is-medium is-fullwidth" 
-                :disabled="errors.any() || !isValid"
-                v-if="editValues">
-          <span>Guardar Cambios</span>
-        </button>
+        <div class="control">
+          <button class="button is-block is-success is-medium" 
+                  :disabled="errors.any() || !isValid"
+                  v-if="editValues">
+            <span>Guardar Cambios</span>
+          </button>
+        </div>
+
+
+        <div class="control">
+          <a class="button is-block is-warning is-medium" 
+                  :disabled="errors.any() || !isValid"
+                  v-if="editValues"
+                  @click="editValues = !editValues">
+            <span>Cancelar</span>
+          </a>
+        </div>
+
       </div>
 
       <hr v-if="formError">
