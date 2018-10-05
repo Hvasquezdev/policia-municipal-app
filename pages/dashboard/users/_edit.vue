@@ -178,7 +178,7 @@
             <input type="password" 
                     placeholder="Escribe tu nueva contraseña" 
                     class="input is-medium is-rounded" 
-                    v-validate="'required|alpha_num|min:7'"
+                    v-validate="'alpha_num|min:7'"
                     v-model="user.data.newPass"
                     name="newPass"
                     :class="{'is-danger': errors.first('newPass')}"
@@ -198,7 +198,7 @@
                     placeholder="Repite tu nueva contraseña" 
                     class="input is-medium is-rounded" 
                     v-model="confirmNewPass"
-                    v-validate="'required|alpha_num|min:7'"
+                    v-validate="'alpha_num|min:7'"
                     name="confirmNewPass"
                     :class="{'is-danger': confirmNewPass !== user.data.newPass && confirmNewPass || errors.first('confirmNewPass')}"
                     :disabled="!editValues">
@@ -249,6 +249,7 @@
 <script>
 import SpinnerComponent from '@/components/Spinner'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -293,15 +294,41 @@ export default {
 
   methods: {
     getId() {
-      let routeParam = this.$router.history.current.params.edit;
-      axios.get(`http://localhost:3001/${routeParam}`).then(response => {
+      const routeParam = this.$router.history.current.params.edit;
+      const AuthStr = 'Bearer '.concat(this.token);
+      const URL = `http://localhost:3001/${routeParam}`;
+      axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
         this.user = response.data;
       }).catch(error => {
         console.error(error);
       });
     },
     editUser() {
-      alert('Testing Function');
+      if(!this.isValid) {
+        console.error('Formulario invalido');
+        return;
+      } else {
+        this.$validator.validateAll().then(response => {
+          if(!response) {
+            alert('Rellene todos los campos')
+            return
+          } 
+
+          this.$store.dispatch('EDIT_USER_REQUEST', this.user).then(() => {
+            if(this.authStatus === 'success') {
+              this.formError = '';
+              setTimeout(() => {
+                this.$router.push('/dashboard/users');
+              }, 2000);
+            }
+          }).catch(err => {
+            this.formError = err;
+          });
+          
+        }).catch(error => {
+          console.error(error);
+        });
+      }
     }
   },
 
@@ -309,7 +336,10 @@ export default {
     isValid() {
       return this.user.data.nombre && this.user.data.apellido && this.user.data.email && 
       this.user.credentials.telefono && this.user.data.cedula && this.user.credentials.licencia && this.user.credentials.placa
-    }
+    },
+    ...mapGetters({
+      token: 'isAuthenticated'
+    })
   }
 }
 </script>

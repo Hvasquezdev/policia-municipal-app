@@ -204,12 +204,13 @@ export default {
         nombre: '',
         apellido: '',
         rol: 'Usuario',
+        estado: 'Activo',
         cedula: '',
         email: '',
         licencia: null,
         placa: '',
         telefono: null,
-        pass: ''
+        pass: '',
       },
       registerError: ''
     }

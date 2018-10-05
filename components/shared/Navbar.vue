@@ -74,12 +74,14 @@ import { mapGetters } from 'vuex'
 
 export default {
   mounted() {
-    let tokenString = Cookie.get('user-data')
-    if(typeof tokenString !== 'undefined'){
-      const tokenData = JSON.parse(tokenString)
-      this.setTokenData(tokenData)
+    const decodeToken = Cookie.get('user-data');
+    const token = Cookie.get('user-token');
+    if(typeof decodeToken !== 'undefined'){
+      const tokenData = JSON.parse(decodeToken);
+      this.setDecodeToken(tokenData);
+      this.setToken(token);
     } else {
-      this.setTokenData(null)
+      this.setDecodeToken(null);
     }
   },
   data() {
@@ -89,10 +91,11 @@ export default {
     }
   },
   methods: {
-    setTokenData(tokenData) { this.$store.dispatch('TOKEN_DATA', tokenData) },
+    setDecodeToken(decodeToken) { this.$store.dispatch('TOKEN_DATA', decodeToken) },
+    setToken(token) { this.$store.dispatch('SET_TOKEN', token) },
     logOut() { 
       this.$store.dispatch('AUTH_LOGOUT').then(() => {
-        this.$router.push('/login')
+        this.$router.push('/login');
       }) 
     }
   },

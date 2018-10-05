@@ -63,6 +63,10 @@ const store = () => {
 
       SET_TOKEN_DATA: (state, payload) => {
         state.profile = payload;
+      },
+
+      SET_TOKEN: (state, payload) => {
+        state.auth.token = payload;
       }
     },
 
@@ -86,12 +90,34 @@ const store = () => {
               Cookie.remove('user-token'); // If the request fails, remove any possible user token
               delete axios.defaults.headers.common['Authorization'];
               reject({status: err.response.status, message: err.response.data.message});
-            })
+            });
         });
+      },
+
+      EDIT_USER_REQUEST: ({commit, state}, user) => {
+        return new Promise((resolve, reject) => {
+          commit('AUTH_REQUEST');
+          const AuthStr = 'Bearer '.concat(state.auth.token);
+          const URL = `http://localhost:3001/${user.data.ID}`;
+          axios.defaults.headers.common['Authorization'] = AuthStr;
+          axios.put(URL, user)
+            .then(resp => {
+              commit('AUTH_SUCCESS');
+              resolve(resp);
+            })
+            .catch(error => {
+              commit('AUTH_ERROR', err.response.status);
+              reject({status: err.response.status, message: err.response.data.message});
+            });
+        })
       },
 
       TOKEN_DATA: ({commit}, tokenData) => {
         commit('SET_TOKEN_DATA', tokenData);
+      },
+
+      SET_TOKEN: ({commit}, token) => {
+        commit('SET_TOKEN', token);
       },
 
       //Logout

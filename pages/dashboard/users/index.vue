@@ -84,18 +84,35 @@
 <script>
 import SpinnerComponent from '@/components/Spinner'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     SpinnerComponent
   },
   mounted() {
-    axios.get('http://localhost:3001/').then(response => this.users = response.data)
+    this.getUsers();
   },
   data() {
     return {
       users: []
     }
+  },
+  methods: {
+    getUsers () {
+      const AuthStr = 'Bearer '.concat(this.token);
+      const URL = 'http://localhost:3001/';
+      axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
+        this.users = response.data;
+      }).catch(error => {
+        console.error(error);
+      });
+    }
+  },
+  computed: {
+    ...mapGetters({
+      token: 'isAuthenticated'
+    })
   }
 }
 </script>
