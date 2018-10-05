@@ -133,49 +133,38 @@
         </div>
       </div>
 
-      <div class="field">
-        <div class="control is-expanded has-icons-left">
-          <div class="control">
-            <label class="label">Estado de la cuenta</label>
-            <div class="select is-rounded is-medium">
-              <select :disabled="!editValues" v-model="user.rol.estado">
-                <option :value="user.rol.estado">{{ user.rol.estado }}</option>
-                <option value="Inactivo" v-if="user.rol.estado !== 'Inactivo'">Inactivo</option>
-                <option value="Activo" v-if="user.rol.estado !== 'Activo'">Activo</option>
-              </select>
-              <span class="icon is-small is-left">
-                <i class="fas fa-car"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <hr>
 
       <div class="field">
-        <div class="control is-expanded has-icons-left">
+        <div class="control has-icons-left">
+          <label class="label">Nueva Contraseña</label>
           <div class="control">
-            <label class="label">Tipo de usuario</label>
-            <div class="select is-rounded is-medium">
-              <select :disabled="!editValues" v-model="user.rol.nombre">
-                <option :value="user.rol.nombre">{{ user.rol.nombre }}</option>
-                <option value="Usuario" v-if="user.rol.nombre !== 'Usuario'">Usuario</option>
-                <option value="Administrador" v-if="user.rol.nombre !== 'Administrador'">Administrador</option>
-              </select>
-              <span class="icon is-small is-left">
-                <i class="fas fa-car"></i>
-              </span>
-            </div>
+            <input type="password" 
+                    placeholder="Escribe tu nueva contraseña" 
+                    class="input is-medium is-rounded" 
+                    v-validate="'required|alpha_num|min:7'"
+                    v-model="user.data.newPass"
+                    name="newPass"
+                    :class="{'is-danger': errors.first('newPass')}"
+                    :disabled="!editValues">
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
           </div>
         </div>
       </div>
 
       <div class="field">
         <div class="control has-icons-left">
-          <label class="label">Contraseña</label>
+          <label class="label">Repite la nueva Contraseña</label>
           <div class="control">
             <input type="password" 
-                    placeholder="Contraseña" 
+                    placeholder="Repite tu nueva contraseña" 
                     class="input is-medium is-rounded" 
+                    v-model="confirmNewPass"
+                    v-validate="'required|alpha_num|min:7'"
+                    name="confirmNewPass"
+                    :class="{'is-danger': confirmNewPass !== user.data.newPass && confirmNewPass || errors.first('confirmNewPass')}"
                     :disabled="!editValues">
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
@@ -211,6 +200,7 @@
 <script>
 import SpinnerComponent from '@/components/Spinner'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -230,6 +220,7 @@ export default {
           "apellido":"",
           "email":"",
           "pass":"",
+          "newPass": "",
           "cedula":null
         },
         "rol":{
@@ -247,13 +238,14 @@ export default {
         }
       },
       formError: '',
-      editValues: false
+      editValues: false,
+      confirmNewPass: ""
     }
   },
 
   methods: {
     getId() {
-      let routeParam = this.$router.history.current.params.edit;
+      let routeParam = this.tokenData.sub;
       axios.get(`http://localhost:3001/${routeParam}`).then(response => {
         this.user = response.data;
       }).catch(error => {
@@ -269,7 +261,10 @@ export default {
     isValid() {
       return this.user.data.nombre && this.user.data.apellido && this.user.data.email && 
       this.user.credentials.telefono && this.user.data.cedula && this.user.credentials.licencia && this.user.credentials.placa
-    }
+    },
+    ...mapGetters({
+      tokenData: 'stateProfile'
+    })
   }
 }
 </script>

@@ -2,30 +2,38 @@
 <div class="section">
   <div class="columns is-multiline" v-if="tokenData">
     <div class="column is-12-tablet is-3-desktop is-2-widescreen has-background-light">
-      <nav class="menu">
+      <aside class="menu">
         <p class="menu-label">
           Menu
         </p>
 
         <ul class="menu-list">
           <li>
-            <nuxt-link to="/dashboard">
+            <nuxt-link to="/dashboard" exact-active-class="is-active">
               <span class="icon">
                 <i class="fas fa-tachometer-alt"></i>
               </span>
               Dashboard
             </nuxt-link>
           </li>
-          <li>
-            <nuxt-link to="/dashboard/users">
+          <li v-if="tokenData.rol === 'Administrador'">
+            <nuxt-link to="/dashboard/users" exact-active-class="is-active">
               <span class="icon">
                 <i class="fas fa-users"></i>
               </span>
               Usuarios
             </nuxt-link>
           </li>
+          <li v-if="tokenData.rol === 'Usuario'">
+            <nuxt-link to="/dashboard/perfil" exact-active-class="is-active">
+              <span class="icon">
+                <i class="fas fa-user"></i>
+              </span>
+              Perfil
+            </nuxt-link>
+          </li>
           <li>
-            <nuxt-link to="/dashboard/multas">
+            <nuxt-link to="/dashboard/multas" exact-active-class="is-active">
               <span class="icon">
                 <i class="far fa-list-alt"></i>
               </span>
@@ -33,7 +41,7 @@
             </nuxt-link>
           </li>
         </ul>
-      </nav>
+      </aside>
     </div> 
     <nuxt-child />
   </div>
@@ -77,5 +85,9 @@ export default {
 <style lang="scss" scoped>
 .section {
   padding-top: 100px;
+}
+
+.is-active-link {
+  background: red !important;
 }
 </style>

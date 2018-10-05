@@ -71,7 +71,6 @@
           <td>
             <div class="buttons">
               <router-link :to="{ path: `/dashboard/users/${user.ID}`}" class="button is-small is-warning">Editar</router-link>
-              <a class="button is-small is-danger delete-user">Borrar</a>
             </div>
           </td>
         </tr>
