@@ -52,6 +52,10 @@ const store = () => {
       REG_SUCCESS: state => {
         state.auth.status = 'register_success'
       },
+      
+      EDIT_SUCCESS: state => {
+        state.auth.status = 'edit_success'
+      },
 
       GETTING_TOKEN: (state, payload) => {
         let token = Cookie.get('user-token');
@@ -67,6 +71,10 @@ const store = () => {
 
       SET_TOKEN: (state, payload) => {
         state.auth.token = payload;
+      },
+
+      STATUS_NONE: (state) => {
+        state.auth.status = '';
       }
     },
 
@@ -102,7 +110,7 @@ const store = () => {
           axios.defaults.headers.common['Authorization'] = AuthStr;
           axios.put(URL, user)
             .then(resp => {
-              commit('AUTH_SUCCESS');
+              commit('EDIT_SUCCESS');
               resolve(resp);
             })
             .catch(error => {
@@ -118,6 +126,10 @@ const store = () => {
 
       SET_TOKEN: ({commit}, token) => {
         commit('SET_TOKEN', token);
+      },
+
+      STATUS_NONE: ({commit}) => {
+        commit('STATUS_NONE');
       },
 
       //Logout

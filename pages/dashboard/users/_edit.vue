@@ -179,7 +179,7 @@
                     placeholder="Escribe tu nueva contraseña" 
                     class="input is-medium is-rounded" 
                     v-validate="'alpha_num|min:7'"
-                    v-model="user.data.newPass"
+                    v-model="newPass"
                     name="newPass"
                     :class="{'is-danger': errors.first('newPass')}"
                     :disabled="!editValues">
@@ -200,7 +200,7 @@
                     v-model="confirmNewPass"
                     v-validate="'alpha_num|min:7'"
                     name="confirmNewPass"
-                    :class="{'is-danger': confirmNewPass !== user.data.newPass && confirmNewPass || errors.first('confirmNewPass')}"
+                    :class="{'is-danger': confirmNewPass !== newPass && confirmNewPass || errors.first('confirmNewPass')}"
                     :disabled="!editValues">
             <span class="icon is-small is-left">
               <i class="fas fa-lock"></i>
@@ -209,25 +209,37 @@
         </div>
       </div>
 
+
       <div class="field is-grouped">
-        <a class="button is-block is-warning is-medium is-fullwidth" 
-                v-if="!editValues"
-                @click="editValues = !editValues">
-          <span>Editar Campos</span>
-        </a>
+        <div class="control">
+          <a class="button button-shadow is-block is-warning is-medium is-fullwidth" 
+                  v-if="!editValues"
+                  @click="editValues = !editValues">
+            <span>Editar Campos</span>
+          </a>
+        </div>
+        <div class="control">
+          <nuxt-link to="/dashboard/users" class="button button-shadow is-block is-dark is-medium is-fullwidth" v-if="!editValues">
+            <span>Volver</span>
+          </nuxt-link>
+        </div>
 
         <div class="control">
-          <button class="button is-block is-success is-medium" 
-                  :disabled="errors.any() || !isValid"
+          <button class="button button-shadow is-block is-success is-medium" 
+                  :disabled="errors.any() || !isValid || editStatus === 'loading' || editStatus === 'edit_success'"
                   v-if="editValues">
-            <span>Guardar Cambios</span>
+            <span v-if="editStatus !== 'loading' && editStatus !== 'edit_success'">Guardar Cambios</span>
+            <i class="fas fa-spinner fa-pulse" v-if="editStatus == 'loading'"></i>
+            <span v-if="editStatus == 'edit_success'">
+              <i class="far fa-check-circle"></i>
+              Usuario actualizado, procesando...
+            </span>
           </button>
         </div>
 
-
         <div class="control">
-          <a class="button is-block is-warning is-medium" 
-                  :disabled="errors.any() || !isValid"
+          <a class="button button-shadow is-block is-warning is-medium" 
+                  :disabled="errors.any() || !isValid || editStatus === 'loading' || editStatus === 'edit_success'"
                   v-if="editValues"
                   @click="editValues = !editValues">
             <span>Cancelar</span>
@@ -269,7 +281,6 @@ export default {
           "apellido":"",
           "email":"",
           "pass":"",
-          "newPass": "",
           "cedula":null
         },
         "rol":{
@@ -288,6 +299,7 @@ export default {
       },
       formError: '',
       editValues: false,
+      newPass: "",
       confirmNewPass: ""
     }
   },
@@ -314,11 +326,14 @@ export default {
             return
           } 
 
+          if(this.newPass) this.user.data.pass = this.newPass;
+
           this.$store.dispatch('EDIT_USER_REQUEST', this.user).then(() => {
-            if(this.authStatus === 'success') {
+            if(this.editStatus === 'edit_success') {
               this.formError = '';
               setTimeout(() => {
                 this.$router.push('/dashboard/users');
+                this.$store.dispatch('STATUS_NONE');
               }, 2000);
             }
           }).catch(err => {
@@ -335,10 +350,11 @@ export default {
   computed: {
     isValid() {
       return this.user.data.nombre && this.user.data.apellido && this.user.data.email && 
-      this.user.credentials.telefono && this.user.data.cedula && this.user.credentials.licencia && this.user.credentials.placa
+      this.user.credentials.telefono && this.user.data.cedula && this.user.credentials.licencia && this.user.credentials.placa && this.newPass === this.confirmNewPass;
     },
     ...mapGetters({
-      token: 'isAuthenticated'
+      token: 'isAuthenticated',
+      editStatus: 'authStatus'
     })
   }
 }
@@ -346,7 +362,7 @@ export default {
 
 <style lang="scss" scoped>
 form {
-  .button {
+  .button-shadow {
     box-shadow: 0 4px 14px 0 rgba(35,209,96,.39)!important;
     border-radius: 7px;
     transition-duration: .3s;
