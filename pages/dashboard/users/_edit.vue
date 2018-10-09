@@ -308,7 +308,7 @@ export default {
     getId() {
       const routeParam = this.$router.history.current.params.edit;
       const AuthStr = 'Bearer '.concat(this.token);
-      const URL = `http://localhost:3001/${routeParam}`;
+      const URL = `http://localhost:3001/user/${routeParam}`;
       axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
         this.user = response.data;
       }).catch(error => {

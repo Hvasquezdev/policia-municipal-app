@@ -173,6 +173,7 @@
   </div>
 </template>
 
+<!-- Script With JavaScript -->
 <script>
 import SpinnerComponent from '@/components/Spinner'
 import Cookie from 'js-cookie'
@@ -250,6 +251,7 @@ export default {
 }
 </script>
 
+<!-- Styles With SCSS -->
 <style lang="scss" scoped>
 .hero {
 

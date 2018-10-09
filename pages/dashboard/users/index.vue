@@ -71,6 +71,7 @@
           <td>
             <div class="buttons">
               <router-link :to="{ path: `/dashboard/users/${user.ID}`}" class="button is-small is-warning">Editar</router-link>
+              <router-link :to="{ path: `/dashboard/factura/${user.ID}`}" class="button is-small is-danger">Multar</router-link>
             </div>
           </td>
         </tr>
@@ -81,6 +82,7 @@
   </div>
 </template>
 
+<!-- Script With JavaScript -->
 <script>
 import SpinnerComponent from '@/components/Spinner'
 import axios from 'axios'
@@ -116,7 +118,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
