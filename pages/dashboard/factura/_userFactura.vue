@@ -3,15 +3,16 @@
     <h1 class="title" v-if="user.ID">Multando a {{ user.nombre }} {{ user.apellido }}: v-{{ user.cedula }} 
     </h1>
 
-    <form @submit.prevent="editUser" v-if="user.ID">
-
+    <form @submit.prevent="sendInvoice" v-if="user.ID">
+      <!-- Tipo de multa -->
       <div class="field">
         <div class="control has-icons-left">
           <div class="control">
             <label class="label">Selecciona la multa</label>
             <div class="select">
-              <select>
-                <option v-for="(multa, index) in multas" :key="index" value="multa.ID">{{ multa.Nombre }}: Bs.S {{ multa.Precio }} </option>
+              <select v-model="factura.tipoMulta">
+                <option disabled>Seleciona una multa</option>
+                <option v-for="(multa, index) in multas" :key="index" :value="multa.ID">{{ multa.Nombre }}: Bs.S {{ multa.Precio }} </option>
               </select>
               <span class="icon is-small is-left">
                 <i class="fas fa-calendar-alt"></i>
@@ -23,12 +24,13 @@
 
       <hr>
 
+      <!-- Fecha de emision de la multa -->
       <h3 class="subtitle">Fecha de la multa</h3>
       <div class="field has-addons">
         <div class="control has-icons-left is-expanded">
           <label class="label">Dia</label>
           <div class="control">
-            <input class="input" type="number" placeholder="Escribe el dia en numero" min="1" max="31">
+            <input class="input" type="number" placeholder="Escribe el dia en numero" min="1" max="31" v-model="factura.fechaInicio.dia">
             <span class="icon is-small is-left">
               <i class="fas fa-calendar-alt"></i>
             </span>
@@ -39,8 +41,8 @@
           <div class="control">
             <label class="label">Mes</label>
             <div class="select">
-              <select>
-                <option v-for="(mes, index) in meses" :key="index" value="mes">{{ mes }}</option>
+              <select v-model="factura.fechaInicio.mes">
+                <option v-for="(mes, index) in meses" :key="index" :value="mes">{{ mes }}</option>
               </select>
               <span class="icon is-small is-left">
                 <i class="fas fa-calendar-alt"></i>
@@ -52,7 +54,7 @@
         <div class="control has-icons-left is-expanded">
           <label class="label">Año</label>
           <div class="control">
-            <input class="input" type="number" placeholder="Año de la multa" min="2018">
+            <input class="input" type="number" placeholder="Año de la multa" min="2018" v-model="factura.fechaInicio.año">
             <span class="icon is-small is-left">
               <i class="fas fa-calendar-alt"></i>
             </span>
@@ -62,12 +64,13 @@
 
       <hr>
 
+      <!-- Fecha limite de pago -->
       <h3 class="subtitle">Fecha limite de la multa</h3>
       <div class="field has-addons">
         <div class="control has-icons-left is-expanded">
           <label class="label">Dia</label>
           <div class="control">
-            <input class="input" type="number" placeholder="Escribe el dia en numero" min="1" max="31">
+            <input class="input" type="number" placeholder="Escribe el dia en numero" min="1" max="31" v-model="factura.fechaLimite.dia">
             <span class="icon is-small is-left">
               <i class="fas fa-calendar-alt"></i>
             </span>
@@ -78,8 +81,8 @@
           <div class="control">
             <label class="label">Mes</label>
             <div class="select">
-              <select>
-                <option v-for="(mes, index) in meses" :key="index" value="mes">{{ mes }}</option>
+              <select v-model="factura.fechaLimite.mes">
+                <option v-for="(mes, index) in meses" :key="index" :value="mes">{{ mes }}</option>
               </select>
               <span class="icon is-small is-left">
                 <i class="fas fa-calendar-alt"></i>
@@ -91,7 +94,7 @@
         <div class="control has-icons-left is-expanded">
           <label class="label">Año</label>
           <div class="control">
-            <input class="input" type="number" placeholder="Año de la multa" min="2018">
+            <input class="input" type="number" placeholder="Año de la multa" min="2018" v-model="factura.fechaLimite.año">
             <span class="icon is-small is-left">
               <i class="fas fa-calendar-alt"></i>
             </span>
@@ -99,20 +102,21 @@
         </div>
       </div>
 
+      <!-- Mensaje que describa la multa -->
       <div class="field">
         <div class="control">
           <label class="label">Mensaje</label>
           <div class="control">
-            <textarea class="textarea" placeholder="e.g. Hello world"></textarea>
+            <textarea class="textarea" placeholder="e.g. Hello world" v-model="factura.mensaje"></textarea>
           </div>
         </div>
       </div>
 
       <div class="field is-grouped">
         <div class="control">
-          <a class="button button-shadow is-block is-warning is-medium is-fullwidth">
+          <button class="button button-shadow is-block is-warning is-medium is-fullwidth">
             <span>Completar multa</span>
-          </a>
+          </button>
         </div>
         <div class="control">
           <nuxt-link to="/dashboard/users" class="button button-shadow is-block is-dark is-medium is-fullwidth">
@@ -158,7 +162,21 @@ export default {
       },
       meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
       formError: '',
-      multas: []
+      multas: [],
+      factura: {
+        tipoMulta: 'Seleciona una multa',
+        fechaInicio: {
+          dia: '',
+          mes: 'Enero',
+          año: ''
+        },
+        fechaLimite: {
+          dia: '',
+          mes: 'Enero',
+          año: ''
+        },
+        mensaje: '',
+      }
     }
   },
 
@@ -181,8 +199,12 @@ export default {
         console.error(error);
       });
     },
-    editUser() {
-
+    sendInvoice() {
+      const AuthStr = 'Bearer '.concat(this.token);
+      axios.defaults.headers.common['Authorization'] = AuthStr;
+      axios.post('http://localhost:3001/factura', {factura: this.factura, user: this.user.ID}).then(response => {
+        console.log(response)
+      }).catch(error => console.log(error))
     }
   },
 
