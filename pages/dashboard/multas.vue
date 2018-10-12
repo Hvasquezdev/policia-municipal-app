@@ -45,6 +45,11 @@ export default {
     return {
       multas: []
     }
+  },
+  computed: {
+    ...mapGetters({
+      token: 'isAuthenticated'
+    })
   }
 }
 </script>

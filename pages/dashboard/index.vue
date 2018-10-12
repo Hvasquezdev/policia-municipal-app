@@ -2,51 +2,45 @@
   <div class="column">
     <div class="level">
       <div class="level-left">
-        <h1 class="subtitle is-3">
+        <h1 class="title is-3">
           <span class="has-text-grey-light">Hola </span> <strong>{{ profileData.nombre }} </strong> <span class="tag is-warning">{{ profileData.rol }}</span>
         </h1>
       </div>
     </div>
-  
+  <hr>
     <div class="columns is-multiline">
-      <div class="column is-12-tablet is-6-widescreen">
-        <div class="notification is-link has-text">
-          <p class="title is-1">{{ solicitudPagoMultas.length }}</p>
-          <p class="subtitle is-4">Solicitudes de pago</p>
-        </div>
+      <div class="column is-12">
+        <h2 class="title is-3 has-text-weight-normal">Solicitudes de pago vigentes</h2>
       </div>
   
-      <div class="column is-12-tablet is-6-widescreen">
-        <div class="notification is-success has-text">
-          <p class="title is-1">{{ solicitudPagoMultas.length }}</p>
-          <p class="subtitle is-4">Multas realizadas</p>
-        </div>
-      </div>
-  
-      <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(multa, index) in solicitudPagoMultas" :key="index">
+      <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(multa, index) in solicitudPagoMultas.factura" :key="index" v-if="solicitudPagoMultas">
         <div class="card">
           <div class="card-content">
-            <h2 class="title is-4">
-              <a href="#">{{ multa.id }} </a> - <span class=" has-text-weight-normal">{{ multa.nombreUser }}</span>
-            </h2>
-  
+            <h3 class="title is-4">
+              <a href="#">ID: {{ multa.ID }}</a> - 
+              <span class="has-text-weight-normal">
+                {{ solicitudPagoMultas.user[index].nombre }} 
+                {{ solicitudPagoMultas.user[index].apellido }}
+              </span>
+            </h3>
+
             <div class="level">
               <div class="level-left">
                 <div>
                   <p class="title is-5 is-marginless">
-                    <span>{{ multa.nombre }}</span>
+                    <span>Multa de {{ solicitudPagoMultas.multa[index].Nombre }}</span>
                   </p>
                   <small>
-                    Multado el {{ multa.fecha }}
+                    Multado el {{ multa.Fecha_Emision }}
                   </small>
                 </div>
               </div>
               <div class="level-right">
                 <div class="has-text-right">
                   <p class="title is-5 is-marginless">
-                    {{ multa.precio }}
+                    Bs.S {{ solicitudPagoMultas.multa[index].Precio }}
                   </p>
-                  <span class="tag is-warning">{{ multa.estado }}</span>
+                  <span class="tag is-warning">{{ multa.Estado_Factura }}</span>
                 </div>
               </div>
             </div>
@@ -61,42 +55,36 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapGetters } from 'vuex'
 
 export default {
+  mounted() {
+    this.getFacturas();
+  },
   data() {
     return {
-      solicitudPagoMultas: [
-        {
-          id: 18231,
-          nombreUser: 'Usuario',
-          nombre: 'Multa de transito 1',
-          fecha: '15 de Julio, 3:38pm',
-          precio: `VEF 1.200.000,00`,
-          estado: 'Pendiente' 
-        },
-        {
-          id: 124123,
-          nombreUser: 'Usuario 2',
-          nombre: 'Multa de transito 2',
-          fecha: '3 de marzo, 1:35pm',
-          precio: `VEF 3.200.000,00`,
-          estado: 'Pendiente' 
-        },
-        {
-          id: 634123,
-          nombreUser: 'Usuario 3',
-          nombre: 'Multa de transito 3',
-          fecha: '15 de enero, 11:30am',
-          precio: `VEF 900.000,00`,
-          estado: 'Pendiente' 
-        }
-      ]
+      solicitudPagoMultas: []
+    }
+  },
+  methods: {
+    getFacturas() {
+      const AuthStr = 'Bearer '.concat(this.token);
+      axios.get('http://localhost:3001/facturas', {headers: {Authorization: AuthStr}}).then(response => {
+        console.log(response)
+        this.solicitudPagoMultas = response.data;
+      }).catch(error => {
+        console.error(error);
+      });
+    },
+    getTest() {
+      return 'Hola'
     }
   },
   computed: {
     ...mapGetters({
-      profileData: 'stateProfile'
+      profileData: 'stateProfile',
+      token: 'isAuthenticated'
     })
   }
 }

@@ -135,7 +135,6 @@
 import SpinnerComponent from '@/components/Spinner'
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import bulmaCalendar from 'bulma-calendar'
 
 export default {
   components: {
@@ -175,7 +174,8 @@ export default {
       });
     },
     getMultas() {
-      axios.get('http://localhost:3001/multas').then(response => {
+      const AuthStr = 'Bearer '.concat(this.token);
+      axios.get('http://localhost:3001/multas', {headers: {Authorization: AuthStr}}).then(response => {
         this.multas = response.data;
       }).catch(error => {
         console.error(error);
