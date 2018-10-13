@@ -32,7 +32,7 @@
               Perfil
             </nuxt-link>
           </li>
-          <li>
+          <li v-if="tokenData.rol === 'Administrador'">
             <nuxt-link to="/dashboard/multas" exact-active-class="is-active">
               <span class="icon">
                 <i class="far fa-list-alt"></i>

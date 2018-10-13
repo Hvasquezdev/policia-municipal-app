@@ -258,8 +258,9 @@ export default {
 
   methods: {
     getId() {
+      const AuthStr = 'Bearer '.concat(this.token);
       let routeParam = this.tokenData.sub;
-      axios.get(`http://localhost:3001/${routeParam}`).then(response => {
+      axios.get(`http://localhost:3001/user/${routeParam}`, {headers: {Authorization: AuthStr}}).then(response => {
         this.user = response.data;
       }).catch(error => {
         console.error(error);
@@ -276,7 +277,8 @@ export default {
       this.user.credentials.telefono && this.user.data.cedula && this.user.credentials.licencia && this.user.credentials.placa
     },
     ...mapGetters({
-      tokenData: 'stateProfile'
+      tokenData: 'stateProfile',
+      token: 'isAuthenticated'
     })
   }
 }

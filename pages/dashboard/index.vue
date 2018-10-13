@@ -13,7 +13,9 @@
         <h2 class="title is-3 has-text-weight-normal">Solicitudes de pago vigentes</h2>
       </div>
   
-      <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(multa, index) in solicitudPagoMultas.factura" :key="index" v-if="solicitudPagoMultas">
+    <!-- If the user is admin and we have invoice request show this list -->
+      <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(multa, index) in solicitudPagoMultas.factura" :key="index" 
+            v-if="solicitudPagoMultas && multa.Estado_Factura == 'Pendiente'">
         <div class="card">
           <div class="card-content">
             <h3 class="title is-4">
@@ -49,6 +51,46 @@
           </div>
         </div>
       </div>
+      <!-- If the user is not admin and he haves invoices show this list -->
+      <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(factura, index) in facturaMultas.factura" :key="index" 
+            v-if="facturaMultas">
+        <div class="card">
+          <div class="card-content">
+            <h3 class="title is-4">
+              <a href="#">ID: {{ factura.ID }}</a>
+            </h3>
+
+            <div class="level">
+              <div class="level-left">
+                <div>
+                  <p class="title is-5 is-marginless">
+                    <span>Multa de {{ facturaMultas.multa[index].Nombre }}</span>
+                  </p>
+                  <small>
+                    Multado el fecha {{ factura.Fecha_Emision }}
+                  </small>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="has-text-right">
+                  <p class="title is-5 is-marginless">
+                    Bs.S precio {{ facturaMultas.multa[index].Precio }}
+                  </p>
+                  <span class="tag is-warning">{{ factura.Estado_Factura }}</span>
+                </div>
+              </div>
+            </div>
+  
+            <a class="button is-success is-fullwidth" href="#">Pagar Multa</a>
+          </div>
+        </div>
+      </div>
+      <!-- Else show this msg -->
+      <div class="column is-12" v-else>
+        <h3 class="subtitle is-4 has-text-grey">
+          No hay solicitudes de pago activas
+        </h3>
+      </div>
   
     </div>
   </div>
@@ -60,15 +102,20 @@ import { mapGetters } from 'vuex'
 
 export default {
   mounted() {
-    this.getFacturas();
+    if(this.profileData.rol === 'Usuario') {
+      this.getFacturas();
+    } else {
+      this.getSolicitudPago();
+    }
   },
   data() {
     return {
-      solicitudPagoMultas: []
+      solicitudPagoMultas: [],
+      facturaMultas: []
     }
   },
   methods: {
-    getFacturas() {
+    getSolicitudPago() {
       const AuthStr = 'Bearer '.concat(this.token);
       axios.get('http://localhost:3001/facturas', {headers: {Authorization: AuthStr}}).then(response => {
         console.log(response)
@@ -79,6 +126,16 @@ export default {
     },
     getTest() {
       return 'Hola'
+    },
+    getFacturas() {
+      const AuthStr = 'Bearer '.concat(this.token);
+      const ID = this.profileData.sub;
+      axios.get(`http://localhost:3001/facturas/${ID}`, {headers: {Authorization: AuthStr}}).then(response => {
+        console.log(response)
+        this.facturaMultas = response.data;
+      }).catch(error => {
+        console.error(error);
+      });
     }
   },
   computed: {
