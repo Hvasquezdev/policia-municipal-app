@@ -176,6 +176,7 @@ export default {
           año: ''
         },
         mensaje: '',
+        estado: 'Activa'
       }
     }
   },

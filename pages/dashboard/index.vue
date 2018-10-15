@@ -10,7 +10,8 @@
   <hr>
     <div class="columns is-multiline">
       <div class="column is-12">
-        <h2 class="title is-3 has-text-weight-normal">Solicitudes de pago vigentes</h2>
+        <h2 class="title is-3 has-text-weight-normal" v-if="profileData.rol === 'Administrador'">Solicitudes de pago vigentes</h2>
+        <h2 class="title is-3 has-text-weight-normal" v-if="profileData.rol === 'Usuario'">Multas pendientes</h2>
       </div>
   
     <!-- If the user is admin and we have invoice request show this list -->
@@ -42,7 +43,7 @@
                   <p class="title is-5 is-marginless">
                     Bs.S {{ solicitudPagoMultas.multa[index].Precio }}
                   </p>
-                  <span class="tag is-warning">{{ multa.Estado_Factura }}</span>
+                  <span class="tag is-warning" v-if="multa.Estado_Factura">{{ multa.Estado_Factura }}</span>
                 </div>
               </div>
             </div>
@@ -51,6 +52,7 @@
           </div>
         </div>
       </div>
+      
       <!-- If the user is not admin and he haves invoices show this list -->
       <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(factura, index) in facturaMultas.factura" :key="index" 
             v-if="facturaMultas">
@@ -74,9 +76,10 @@
               <div class="level-right">
                 <div class="has-text-right">
                   <p class="title is-5 is-marginless">
-                    Bs.S precio {{ facturaMultas.multa[index].Precio }}
+                    Bs.S {{ facturaMultas.multa[index].Precio }}
                   </p>
-                  <span class="tag is-warning">{{ factura.Estado_Factura }}</span>
+                  <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">{{ factura.Estado_Factura }}</span>
+                  <span class="tag is-success" v-if="factura.Estado_Factura === 'Activo'">{{ factura.Estado_Factura }}</span>
                 </div>
               </div>
             </div>
