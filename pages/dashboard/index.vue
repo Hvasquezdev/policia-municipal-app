@@ -48,7 +48,7 @@
               </div>
             </div>
   
-            <a class="button is-success is-fullwidth" href="#">Confirmar pago</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal(solicitudPagoMultas.user[index])">Confirmar pago</a>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
               </div>
             </div>
   
-            <a class="button is-success is-fullwidth" href="#">Pagar Multa</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal">Pagar Multa</a>
           </div>
         </div>
       </div>
@@ -94,7 +94,11 @@
           No hay solicitudes de pago activas
         </h3>
       </div>
-  
+
+      <modal-component :show="showModal" 
+                        :user="profileData" 
+                        :data="modalData"
+                        v-on:toggle="toggleModal"/>
     </div>
   </div>
 </template>
@@ -102,8 +106,12 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
+import ModalComponent from '@/components/dashboard/Modal'
 
 export default {
+  components: {
+    ModalComponent
+  },
   mounted() {
     if(this.profileData.rol === 'Usuario') {
       this.getFacturas();
@@ -114,7 +122,9 @@ export default {
   data() {
     return {
       solicitudPagoMultas: [],
-      facturaMultas: []
+      facturaMultas: [],
+      showModal: false,
+      modalData: ''
     }
   },
   methods: {
@@ -139,6 +149,12 @@ export default {
       }).catch(error => {
         console.error(error);
       });
+    },
+    toggleModal(data) {
+      this.showModal = !this.showModal;
+      if(data) {
+        this.modalData = data;
+      }
     }
   },
   computed: {
