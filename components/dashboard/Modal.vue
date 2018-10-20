@@ -24,7 +24,7 @@
     <!-- If the user is Admin -->
     <div class="modal-content" v-if="user.rol === 'Administrador'">
       <div class="box">
-        <form>
+        <form @submit.prevent="confirmarPago">
           <h2 class="has-text-centered title is-2 has-text-weight-light">Comprobante de pago</h2>
           <hr>
           <div class="field">
@@ -93,6 +93,16 @@ export default {
         console.error(error);
       });
       return comprobante;
+    },
+    confirmarPago() { // TODO: Set this method in the store
+      const AuthStr = 'Bearer '.concat(this.token);
+      const ID = this.data.ID;
+    
+      axios.put(`http://localhost:3001/factura/${ID}`, {headers: {Authorization: AuthStr}, estado: 'Correcto'}).then(response => {        
+        console.log(response);
+      }).catch(error => {
+        console.error(error);
+      });
     }
   },
   computed: {

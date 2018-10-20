@@ -11,7 +11,7 @@
     <div class="columns is-multiline">
       <div class="column is-12">
         <h2 class="title is-3 has-text-weight-normal" v-if="profileData.rol === 'Administrador'">Solicitudes de pago vigentes</h2>
-        <h2 class="title is-3 has-text-weight-normal" v-if="profileData.rol === 'Usuario'">Multas pendientes</h2>
+        <h2 class="title is-3 has-text-weight-normal" v-if="profileData.rol === 'Usuario'">Multas recibidas</h2>
       </div>
   
     <!-- If the user is admin and we have invoice request show this list -->
@@ -79,12 +79,14 @@
                     Bs.S {{ facturaMultas.multa[index].Precio }}
                   </p>
                   <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">{{ factura.Estado_Factura }}</span>
-                  <span class="tag is-success" v-if="factura.Estado_Factura === 'Activo'">{{ factura.Estado_Factura }}</span>
+                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activo'">{{ factura.Estado_Factura }}</span>
+                  <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">{{ factura.Estado_Factura }}</span>
                 </div>
               </div>
             </div>
   
-            <a class="button is-success is-fullwidth" href="#" @click="toggleModal">Pagar Multa</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura !== 'Correcto'">Pagar Multa</a>
+            <a class="button disabled is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura === 'Correcto'" disabled>Multa Pagada</a>
           </div>
         </div>
       </div>
