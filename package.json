@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "bulma": "^0.7.1",
+    "bulma": "^0.7.2",
     "bulma-calendar": "^5.0.1",
     "cookieparser": "^0.1.0",
     "font-awesome": "^4.7.0",

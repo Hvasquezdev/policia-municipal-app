@@ -78,22 +78,23 @@
                   <p class="title is-5 is-marginless">
                     Bs.S {{ facturaMultas.multa[index].Precio }}
                   </p>
-                  <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">{{ factura.Estado_Factura }}</span>
-                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activo'">{{ factura.Estado_Factura }}</span>
-                  <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">{{ factura.Estado_Factura }}</span>
+                  <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
+                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activa'">Multa activa</span>
+                  <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">Pagada</span>
                 </div>
               </div>
             </div>
   
-            <a class="button is-success is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura !== 'Correcto'">Pagar Multa</a>
-            <a class="button disabled is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura === 'Correcto'" disabled>Multa Pagada</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura === 'Activa'">Pagar Multa</a>
+            <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Correcto'" disabled>Multa Pagada</a>
+            <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Pendiente'" disabled>Comprobante enviado</a>
           </div>
         </div>
       </div>
-      <!-- Else show this msg -->
-      <div class="column is-12" v-else>
+
+      <div class="column is-12" v-if="!facturaMultas && !solicitudPagoMultas">
         <h3 class="subtitle is-4 has-text-grey">
-          No hay solicitudes de pago activas
+          No tienes multas activas
         </h3>
       </div>
 
@@ -138,9 +139,6 @@ export default {
       }).catch(error => {
         console.error(error);
       });
-    },
-    getTest() {
-      return 'Hola'
     },
     getFacturas() {
       const AuthStr = 'Bearer '.concat(this.token);

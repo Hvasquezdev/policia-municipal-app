@@ -4,17 +4,17 @@
     <!-- If the user isn't Admin -->
     <div class="modal-content" v-if="user.rol === 'Usuario'">
       <div class="box">
-        <form>
+        <form @submit.prevent="enviarPago">
           <h2 class="has-text-centered title is-2 has-text-weight-light">Comprobante de pago</h2>
           <hr>
           <div class="field">
             <div class="control">
-              <input class="input is-large" type="number" placeholder="Comprobante" v-model="comprobante">
+              <input class="input is-large" type="text" placeholder="Comprobante" v-model="pagoInfo">
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-success is-fullwidth is-large">Enviar Comprobante</button>
+              <button class="button is-success is-fullwidth is-large" :disabled="!pagoInfo">Enviar Comprobante</button>
             </div>
           </div>
         </form>
@@ -70,7 +70,8 @@ export default {
   props: ['show', 'user', 'data'],
   data() {
     return {
-      comprobanteValue: null
+      comprobanteValue: null,
+      pagoInfo: null
     };
   },
   methods: {
@@ -88,7 +89,6 @@ export default {
         } else {
           this.comprobanteValue = null;
         }
-        
       }).catch(error => {
         console.error(error);
       });
@@ -97,9 +97,34 @@ export default {
     confirmarPago() { // TODO: Set this method in the store
       const AuthStr = 'Bearer '.concat(this.token);
       const ID = this.data.ID;
-    
       axios.put(`http://localhost:3001/factura/${ID}`, {headers: {Authorization: AuthStr}, estado: 'Correcto'}).then(response => {        
         console.log(response);
+        if(response.status == 200) { // TODO: add animation for success status
+          alert('Pago confirmado correctamente')
+          this.$router.push('/dashboard');
+        }
+      }).catch(error => {
+        console.error(error);
+      });
+    },
+    enviarPago() {
+      const AuthStr = 'Bearer '.concat(this.token);
+      const pago = {
+        userID: this.user.sub,
+        comprobante: this.pagoInfo
+      }
+      axios.post('http://localhost:3001/pago', {headers: {Authorization: AuthStr}, pago}).then(response => {        
+        if(response.status == 200) {
+          axios.put(`http://localhost:3001/factura/${pago.userID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
+            console.log(response);
+            if(response.status == 200) { // TODO: add animation for success status
+              alert('Comprobante enviado correctamente')
+              this.$router.push('/dashboard');
+            }
+          }).catch(error => {
+            console.error(error);
+          });
+        }
       }).catch(error => {
         console.error(error);
       });
