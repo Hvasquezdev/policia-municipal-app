@@ -31,7 +31,21 @@
           </div>
 
           <div class="navbar-end">
-            <div class="navbar-item has-dropdown is-hoverable" v-if="tokenData">
+            <nuxt-link to="/dashboard" class="navbar-item" v-if="tokenData">
+              Perfil
+            </nuxt-link>
+
+            <div class="navbar-item" v-if="tokenData" @click="logOut">
+              <div class="field">
+                <div class="control">
+                  <a href="#" class="button is-warning">
+                    Cerrar Sesion
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="navbar-item has-dropdown is-hoverable" v-if="tokenData">
               <a class="navbar-link">
                 {{ tokenData.nombre }}
               </a>
@@ -45,7 +59,7 @@
                   Cerrar Cesion
                 </a>
               </div>
-            </div>
+            </div> -->
 
             <div class="navbar-item" v-if="!tokenData">
               <div class="field">

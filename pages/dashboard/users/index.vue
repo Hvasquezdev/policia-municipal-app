@@ -14,14 +14,9 @@
         </p>
 
         <div class="level-item is-hidden-tablet-only">
-          <div class="field has-addons">
+          <div class="field">
             <p class="control">
-              <input class="input" type="text" placeholder="Cedula, Email">
-            </p>
-            <p class="control">
-              <button class="button is-outlined is-info">
-                Buscar
-              </button>
+              <input class="input" type="text" placeholder="Buscar: Nombre" v-model="search">
             </p>
           </div>
         </div>
@@ -52,29 +47,31 @@
         </tr>
       </tfoot>
       <tbody>
-        <tr v-for="(user, index) in users" :key="index">
-          <td>
-            <strong>{{ index +1 }}</strong>
-          </td>
-          <td>
-            {{ user.nombre }}
-          </td>
-          <td>
-            {{ user.apellido }}
-          </td>
-          <td class="is-hidden-mobile">
-            <code>{{ user.email }}</code>
-          </td>
-          <td class="is-hidden-mobile">
-            {{ user.cedula }}
-          </td>
-          <td>
-            <div class="buttons">
-              <router-link :to="{ path: `/dashboard/users/${user.ID}`}" class="button is-small is-warning">Editar</router-link>
-              <router-link :to="{ path: `/dashboard/factura/${user.ID}`}" class="button is-small is-danger">Multar</router-link>
-            </div>
-          </td>
-        </tr>
+        <!-- <transition name="fade"> -->
+          <tr v-for="(user, index) in filterUser" :key="index">
+            <td>
+              <strong>{{ index +1 }}</strong>
+            </td>
+            <td>
+              {{ user.nombre }}
+            </td>
+            <td>
+              {{ user.apellido }}
+            </td>
+            <td class="is-hidden-mobile">
+              <code>{{ user.email }}</code>
+            </td>
+            <td class="is-hidden-mobile">
+              {{ user.cedula }}
+            </td>
+            <td>
+              <div class="buttons">
+                <router-link :to="{ path: `/dashboard/users/${user.ID}`}" class="button is-small is-warning">Editar</router-link>
+                <router-link :to="{ path: `/dashboard/factura/${user.ID}`}" class="button is-small is-danger">Multar</router-link>
+              </div>
+            </td>
+          </tr>
+        <!-- </transition> -->
       </tbody>
     </table>
 
@@ -97,7 +94,8 @@ export default {
   },
   data() {
     return {
-      users: []
+      users: [],
+      search: ''
     }
   },
   methods: {
@@ -114,7 +112,21 @@ export default {
   computed: {
     ...mapGetters({
       token: 'isAuthenticated'
-    })
+    }),
+    filterUser() {
+      return this.users.filter((user) => {
+        return user.nombre.toLowerCase().includes(this.search.toLowerCase());
+      });
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
