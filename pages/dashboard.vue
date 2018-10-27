@@ -37,7 +37,15 @@
               <span class="icon">
                 <i class="far fa-list-alt"></i>
               </span>
-              Multas
+              Multas Registradas
+            </nuxt-link>
+          </li>
+          <li>
+            <nuxt-link to="/dashboard/multasReg">
+              <span class="icon">
+                <i class="far fa-list-alt"></i>
+              </span>
+              Multas Realizadas
             </nuxt-link>
           </li>
         </ul>

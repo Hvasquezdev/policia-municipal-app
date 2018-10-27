@@ -115,7 +115,8 @@
       <div class="field is-grouped">
         <div class="control">
           <button class="button button-shadow is-block is-warning is-medium is-fullwidth">
-            <span>Completar multa</span>
+            <span v-if="facturaStatus == ''">Completar multa</span>
+            <i class="fas fa-spinner fa-pulse" v-if="facturaStatus == 'loading'"></i>
           </button>
         </div>
         <div class="control">
@@ -176,8 +177,9 @@ export default {
           año: ''
         },
         mensaje: '',
-        estado: 'Activa'
-      }
+        estado: 'Activa',
+      },
+      facturaStatus: ''
     }
   },
 
@@ -203,8 +205,14 @@ export default {
     sendInvoice() {
       const AuthStr = 'Bearer '.concat(this.token);
       axios.defaults.headers.common['Authorization'] = AuthStr;
+      this.facturaStatus = 'loading';
       axios.post('http://localhost:3001/factura', {factura: this.factura, user: this.user.ID}).then(response => {
-        console.log(response)
+        if(response.status == 200) {
+          setTimeout(() => {
+            this.facturaStatus = '';
+            this.$router.push('/dashboard/users');
+          }, 1500);
+        }
       }).catch(error => console.log(error))
     }
   },

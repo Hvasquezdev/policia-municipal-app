@@ -5,7 +5,7 @@
       <div class="level-left">
         <div class="level-item">
           <p class="subtitle">
-            <strong>{{ users.length }}</strong> Usuarios
+            <strong>1</strong> Usuarios
           </p>
         </div>
 
@@ -25,29 +25,29 @@
       </div>
     </nav>
 
-    <table class="table is-hoverable is-fullwidth" v-if="users.length > 0">
+    <table class="table is-hoverable is-fullwidth">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th class="is-hidden-mobile">Email</th>
-          <th class="is-hidden-mobile">Cedula</th>
+          <th>Multa</th>
+          <th>Usuario</th>
+          <th class="is-hidden-mobile">Fecha</th>
+          <th class="is-hidden-mobile">Precio</th>
           <th>Opciones</th>
         </tr>
       </thead>
       <tfoot>
         <tr>
           <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th class="is-hidden-mobile">Email</th>
-          <th class="is-hidden-mobile">Cedula</th>
+          <th>Multa</th>
+          <th>Usuario</th>
+          <th class="is-hidden-mobile">Fecha</th>
+          <th class="is-hidden-mobile">Precio</th>
           <th>Opciones</th>
         </tr>
       </tfoot>
       <tbody>
-        <tr v-for="(user, index) in filterUser" :key="index">
+        <!-- <tr v-for="(user, index) in filterUser" :key="index">
           <td>
             <strong>{{ index +1 }}</strong>
           </td>
@@ -69,62 +69,8 @@
               <router-link :to="{ path: `/dashboard/factura/${user.ID}`}" class="button is-small is-danger">Multar</router-link>
             </div>
           </td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
-
-    <spinner-component v-if="users.length == 0"/>
   </div>
 </template>
-
-<!-- Script With JavaScript -->
-<script>
-import SpinnerComponent from '@/components/Spinner'
-import axios from 'axios'
-import { mapGetters } from 'vuex'
-
-export default {
-  components: {
-    SpinnerComponent
-  },
-  mounted() {
-    this.getUsers();
-  },
-  data() {
-    return {
-      users: [],
-      search: ''
-    }
-  },
-  methods: {
-    getUsers () {
-      const AuthStr = 'Bearer '.concat(this.token);
-      const URL = 'http://localhost:3001/';
-      axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
-        this.users = response.data;
-      }).catch(error => {
-        console.error(error);
-      });
-    }
-  },
-  computed: {
-    ...mapGetters({
-      token: 'isAuthenticated'
-    }),
-    filterUser() {
-      return this.users.filter((user) => {
-        return user.nombre.toLowerCase().includes(this.search.toLowerCase());
-      });
-    }
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .3s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>
