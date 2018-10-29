@@ -41,7 +41,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/dashboard/multasReg">
+            <nuxt-link to="/dashboard/multasRealizadas">
               <span class="icon">
                 <i class="far fa-list-alt"></i>
               </span>
