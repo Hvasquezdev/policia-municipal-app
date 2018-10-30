@@ -24,46 +24,6 @@
 
       <hr>
 
-      <!-- Fecha de emision de la multa -->
-      <h3 class="subtitle">Fecha de la multa</h3>
-      <div class="field has-addons">
-        <div class="control has-icons-left is-expanded">
-          <label class="label">Dia</label>
-          <div class="control">
-            <input class="input" type="number" placeholder="Escribe el dia en numero" min="1" max="31" v-model="factura.fechaInicio.dia">
-            <span class="icon is-small is-left">
-              <i class="fas fa-calendar-alt"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="control has-icons-left">
-          <div class="control">
-            <label class="label">Mes</label>
-            <div class="select">
-              <select v-model="factura.fechaInicio.mes">
-                <option v-for="(mes, index) in meses" :key="index" :value="mes">{{ mes }}</option>
-              </select>
-              <span class="icon is-small is-left">
-                <i class="fas fa-calendar-alt"></i>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="control has-icons-left is-expanded">
-          <label class="label">Año</label>
-          <div class="control">
-            <input class="input" type="number" placeholder="Año de la multa" min="2018" v-model="factura.fechaInicio.año">
-            <span class="icon is-small is-left">
-              <i class="fas fa-calendar-alt"></i>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <hr>
-
       <!-- Fecha limite de pago -->
       <h3 class="subtitle">Fecha limite de la multa</h3>
       <div class="field has-addons">
@@ -82,7 +42,7 @@
             <label class="label">Mes</label>
             <div class="select">
               <select v-model="factura.fechaLimite.mes">
-                <option v-for="(mes, index) in meses" :key="index" :value="mes">{{ mes }}</option>
+                <option v-for="(mes, index) in meses" :key="index" :value="index+1">{{ mes }}</option>
               </select>
               <span class="icon is-small is-left">
                 <i class="fas fa-calendar-alt"></i>
@@ -107,7 +67,7 @@
         <div class="control">
           <label class="label">Mensaje</label>
           <div class="control">
-            <textarea class="textarea" placeholder="e.g. Hello world" v-model="factura.mensaje"></textarea>
+            <textarea class="textarea" placeholder="Mensaje para el usuario" v-model="factura.mensaje"></textarea>
           </div>
         </div>
       </div>
@@ -166,14 +126,10 @@ export default {
       multas: [],
       factura: {
         tipoMulta: 'Seleciona una multa',
-        fechaInicio: {
-          dia: '',
-          mes: 'Enero',
-          año: ''
-        },
+        fechaInicio: new Date().toLocaleDateString().split('/').join('-'),
         fechaLimite: {
           dia: '',
-          mes: 'Enero',
+          mes: 1,
           año: ''
         },
         mensaje: '',

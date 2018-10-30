@@ -21,7 +21,7 @@
       </div>
     </nav>
 
-    <table class="table is-hoverable is-fullwidth">
+    <table class="table is-hoverable is-fullwidth" v-if="facturas.factura">
       <thead>
         <tr>
           <th>ID</th>
@@ -54,7 +54,7 @@
             {{ facturas.user[index].nombre }}
           </td>
           <td class="is-hidden-mobile">
-            {{ factura.Fecha_Emision }}
+            {{ factura.Fecha_Emision.split('T')[0].split('-').reverse().join('-') }}
           </td>
           <td class="is-hidden-mobile">
             Bs.S {{ facturas.multa[index].Precio }}
@@ -67,6 +67,9 @@
         </tr>
       </tbody>
     </table>
+    <div class="notification" v-else>
+      No se han realizado multas
+    </div>
   </div>
 </template>
 
