@@ -18,6 +18,17 @@
         </div>
       </div>
       <div class="level-right">
+        <div class="level-item">
+          <div class="select">
+            <select >
+              <option v-for="(mes, index) in meses" :key="index" :value="index+1">{{ mes }}</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="level-item">
+          <button class="button is-success" disabled>Generar PDF</button>
+        </div>
       </div>
     </nav>
 
@@ -83,7 +94,10 @@ export default {
   },
   data() {
     return {
-      facturas: []
+      facturas: [],
+      meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      mesActual: new Date().toLocaleDateString().split('/')[1].split('')[0] == '0' ? new Date().toLocaleDateString().split('/')[1].split('')[1] : new Date().toLocaleDateString().split('/')[1],
+      messs: '01'
     }
   },
   methods: {
