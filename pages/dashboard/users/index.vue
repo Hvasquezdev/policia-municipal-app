@@ -10,7 +10,7 @@
         </div>
 
         <p class="level-item">
-          <router-link to="/dashboard" class="button is-success" href="#">Registrar Usuario</router-link>
+          <router-link to="/dashboard/users/nuevo" class="button is-success">Registrar usuario</router-link>
         </p>
 
         <div class="level-item is-hidden-tablet-only">

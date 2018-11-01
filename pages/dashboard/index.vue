@@ -92,7 +92,13 @@
         </div>
       </div>
 
-      <div class="column is-12" v-if="!facturaMultas && !solicitudPagoMultas">
+      <div class="column is-12" v-if="!solicitudPagoMultas.factura && profileData.rol === 'Administrador'">
+        <h3 class="subtitle is-4 has-text-grey">
+          No hay pagos pendientes por confirmar
+        </h3>
+      </div>
+
+      <div class="column is-12" v-if="!facturaMultas[0] && profileData.rol === 'Usuario'">
         <h3 class="subtitle is-4 has-text-grey">
           No tienes multas activas
         </h3>
@@ -133,7 +139,7 @@ export default {
   methods: {
     getSolicitudPago() {
       const AuthStr = 'Bearer '.concat(this.token);
-      axios.get('http://localhost:3001/facturas', {headers: {Authorization: AuthStr}}).then(response => {
+      axios.get('http://localhost:3001/pagosFactura', {headers: {Authorization: AuthStr}}).then(response => {
         console.log(response)
         this.solicitudPagoMultas = response.data;
       }).catch(error => {

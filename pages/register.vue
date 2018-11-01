@@ -195,8 +195,6 @@ export default {
     }
   },
 
-  layout: 'login',
-
   data() {
     return {
       tokenData: true,
