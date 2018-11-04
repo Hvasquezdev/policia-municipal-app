@@ -5,6 +5,8 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+// TODO: separate store in modules
+
 const store = () => {
   return new Vuex.Store({
     state: {
@@ -81,7 +83,7 @@ const store = () => {
     actions: {
       //Authentication
       AUTH_REQUEST: ({commit}, user) => {
-        return new Promise((resolve, reject) => { // For router redirect in login
+        return new Promise((resolve, reject) => {
           commit('AUTH_REQUEST');
           axios.post('http://localhost:3001/login', user)
             .then(resp => {         
@@ -90,12 +92,11 @@ const store = () => {
               axios.defaults.headers.common['Authorization'] = token;
               commit('AUTH_SUCCESS', {token});
               commit('GETTING_TOKEN', {token});
-              // You have your token, now login user
               resolve(resp);
             })
             .catch(err => { 
               commit('AUTH_ERROR', err.response.status);
-              Cookie.remove('user-token'); // If the request fails, remove any possible user token
+              Cookie.remove('user-token'); // Si la respuesta falla, elimina cualquier token existente (En caso de que se haya almacenado uno)
               delete axios.defaults.headers.common['Authorization'];
               reject({status: err.response.status, message: err.response.data.message});
             });
@@ -136,18 +137,34 @@ const store = () => {
       AUTH_LOGOUT: ({commit}) => {
         return new Promise((resolve) => {
           commit('AUTH_LOGOUT');
-          Cookie.remove('user-token'); // Remove all user's token from localstorage
-          Cookie.remove('user-data');
+          Cookie.remove('user-token'); // Elimina el token del usuario almacenado en los cookies
+          Cookie.remove('user-data'); // Elimina la data del usuario almacenado en los cookies
           delete axios.defaults.headers.common['Authorization'];
           resolve();
         });
       },
 
-      //Register user
+      //Registrando un nuevo usuario
       REGISTER_USER: ({commit}, user) => {
-        return new Promise((resolve, reject) => { // For router redirect
-          commit('AUTH_REQUEST');
+        return new Promise((resolve, reject) => {
+          commit('AUTH_REQUEST'); // Cambiamos el "auth status" para activar el loader del formulario
           axios.post('http://localhost:3001/signUp', user)
+            .then(resp => {         
+              commit('REG_SUCCESS');
+              resolve(resp);
+            })
+            .catch(err => { 
+              commit('AUTH_ERROR', err.response.status);
+              reject({status: err.response.status, message: err.response.data.message});
+            });
+        });
+      },
+
+      //Registro de nueva multa
+      REGISTER_MULTA: ({commit}, multa) => {
+        return new Promise((resolve, reject) => {
+          commit('AUTH_REQUEST'); // Cambiamos el "auth status" para activar el loader del formulario
+          axios.post('http://localhost:3001/newMulta', multa)
             .then(resp => {         
               commit('REG_SUCCESS');
               resolve(resp);
