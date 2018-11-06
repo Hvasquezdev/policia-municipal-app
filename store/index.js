@@ -175,6 +175,25 @@ const store = () => {
             });
         });
       },
+
+      //Editando la multa seleccionada
+      EDIT_MULTA_REQUEST: ({commit, state}, multa) => {
+        return new Promise((resolve, reject) => {
+          commit('AUTH_REQUEST');
+          const AuthStr = 'Bearer '.concat(state.auth.token);
+          const URL = `http://localhost:3001/multas/${multa.ID}`;
+          axios.defaults.headers.common['Authorization'] = AuthStr;
+          axios.put(URL, multa)
+            .then(resp => {
+              commit('EDIT_SUCCESS');
+              resolve(resp);
+            })
+            .catch(error => {
+              commit('AUTH_ERROR', err.response.status);
+              reject({status: err.response.status, message: err.response.data.message});
+            });
+        })
+      }
     }
   })
 }

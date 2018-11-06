@@ -51,7 +51,10 @@
           Bs.S {{ multa.Precio }}
         </td>
         <td>
-          <button class="button is-warning is-small">Editar</button>
+          <div class="buttons">
+            <router-link :to="{ path: `/dashboard/multas/${multa.ID}`}" class="button is-warning is-small">Editar</router-link>
+            <button class="button is-danger is-small">Eliminar</button>
+          </div>
         </td>
       </tr>
     </tbody>
