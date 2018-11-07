@@ -17,10 +17,29 @@
     </div>
   </nav>
 
+  <div class="notification is-danger-outlined" v-if="deleteMsg">
+    <button class="delete" @click="deleteMsg = !deleteMsg"></button>
+    ¿Seguro que desea eliminar la multa de: <strong>{{ multaSelec.nombre }}</strong>?
+    <div class="buttons" style="margin-top: 10px;">
+      <button class="button is-danger is-outlined" @click="deleteMulta(multaSelec.id)">
+        <span>Eliminar</span>
+        <span class="icon is-small">
+          <i class="fas fa-times"></i>
+        </span>
+      </button>
+      <button class="button is-success is-outlined" @click="deleteMsg = !deleteMsg">
+        <span>Cancelar</span>
+        <span class="icon is-small">
+          <i class="fas fa-check"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+
   <table class="table is-hoverable is-fullwidth">
     <thead>
       <tr>
-        <th>ID</th>
+        <th>#</th>
         <th>Multa</th>
         <th class="is-hidden-mobile">Descripcion</th>
         <th>Precio</th>
@@ -29,7 +48,7 @@
     </thead>
     <tfoot>
       <tr>
-        <th>ID</th>
+        <th>#</th>
         <th>Multa</th>
         <th class="is-hidden-mobile">Descripcion</th>
         <th>Precio</th>
@@ -53,13 +72,20 @@
         <td>
           <div class="buttons">
             <router-link :to="{ path: `/dashboard/multas/${multa.ID}`}" class="button is-warning is-small">Editar</router-link>
-            <button class="button is-danger is-small">Eliminar</button>
+            <button class="button is-danger is-small" @click="setSelectedMulta(multa.ID, multa.Nombre)" :disabled="deleteMsg">Eliminar</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-
+  <hr>
+  <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+    <a class="pagination-previous" title="Esta es la primera pagina" disabled>Anterior</a>
+    <a class="pagination-next is-static" title="No hay mas paginas" disabled>Siguiente</a>
+    <ul class="pagination-list">
+      <li><a class="pagination-link is-current">1</a></li>
+    </ul>
+  </nav>
   <spinner-component v-if="multas.length == 0"/>
 </div>
 </template>
@@ -75,17 +101,46 @@ export default {
     SpinnerComponent
   },
   mounted() {
-    const AuthStr = 'Bearer '.concat(this.token);
-    const URL = 'http://localhost:3001/multas';
-    axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
-      this.multas = response.data;
-    }).catch(error => {
-      console.error(error);
-    });   
+    this.getMultas();
   },
   data() {
     return {
-      multas: []
+      multas: [],
+      deleteMsg: false,
+      multaSelec: {
+        id: null,
+        nombre: ''
+      }
+    }
+  },
+  methods: {
+    setSelectedMulta(id, nombre) {
+      this.multaSelec.id = id;
+      this.multaSelec.nombre = nombre;
+      this.deleteMsg = true;
+    },
+    deleteMulta(id) {
+      const AuthStr = 'Bearer '.concat(this.token);
+      const URL = `http://localhost:3001/multas/${id}`;
+      axios.delete(URL, { headers: { Authorization: AuthStr } }).then(response => {
+        this.deleteMsg = false;
+        this.multaSelec = {
+          id: null,
+          nombre: ''
+        }
+        this.getMultas();
+      }).catch(error => {
+        console.error(error);
+      });  
+    },
+    getMultas() {
+      const AuthStr = 'Bearer '.concat(this.token);
+      const URL = 'http://localhost:3001/multas';
+      axios.get(URL, { headers: { Authorization: AuthStr } }).then(response => {
+        this.multas = response.data;
+      }).catch(error => {
+        console.error(error);
+      }); 
     }
   },
   computed: {
@@ -98,14 +153,7 @@ export default {
 
 
 <style lang="scss" scoped>
-@import '../../../assets/css/multas.css';
-
-.plan-items {
-  columns: auto !important;
-  column-gap: 0 !important;
-
-  .plan-item {
-    overflow-wrap: break-word !important;
-  }
+.is-danger-outlined {
+  border: 2px solid hsl(348, 100%, 61%);
 }
 </style>

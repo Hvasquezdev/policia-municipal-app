@@ -72,7 +72,14 @@
         </tr>
       </tbody>
     </table>
-
+    <hr>
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <a class="pagination-previous" title="Esta es la primera pagina" disabled>Anterior</a>
+      <a class="pagination-next is-static" title="No hay mas paginas" disabled>Siguiente</a>
+      <ul class="pagination-list">
+        <li><a class="pagination-link is-current">1</a></li>
+      </ul>
+    </nav>
     <spinner-component v-if="users.length == 0"/>
   </div>
 </template>

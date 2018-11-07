@@ -81,6 +81,14 @@
     <div class="notification" v-else>
       No se han realizado multas
     </div>
+    <hr>
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+      <a class="pagination-previous" title="Esta es la primera pagina" disabled>Anterior</a>
+      <a class="pagination-next is-static" title="No hay mas paginas" disabled>Siguiente</a>
+      <ul class="pagination-list">
+        <li><a class="pagination-link is-current">1</a></li>
+      </ul>
+    </nav>
   </div>
 </template>
 

@@ -41,7 +41,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link to="/dashboard/multasRealizadas">
+            <nuxt-link to="/dashboard/multasRealizadas" exact-active-class="is-active">
               <span class="icon">
                 <i class="far fa-list-alt"></i>
               </span>

@@ -116,6 +116,7 @@ export default {
             this.registerError = '';
             setTimeout(() => {
               this.$router.push('/dashboard/multas');
+              this.$store.dispatch('STATUS_NONE');
             }, 2000);
           }
         }).catch(err => {
