@@ -9,10 +9,10 @@
           </p>
         </div>
 
-        <div class="level-item is-hidden-tablet-only">
+        <div class="level-item">
           <div class="field">
             <p class="control">
-              <input class="input" type="text" placeholder="Usuario" disabled>
+              <input class="input" type="text" placeholder="Usuario" v-model="search">
             </p>
           </div>
         </div>
@@ -32,7 +32,7 @@
       </div>
     </nav>
 
-    <table class="table is-hoverable is-fullwidth" v-if="facturas.factura">
+    <table class="table is-hoverable is-fullwidth" v-if="facturas">
       <thead>
         <tr>
           <th>ID</th>
@@ -54,26 +54,26 @@
         </tr>
       </tfoot>
       <tbody>
-        <tr v-for="(factura, index) in facturas.factura" :key="index">
+        <tr v-for="(data, index) in filterUser" :key="index">
           <td>
             <strong>{{ index +1 }}</strong>
           </td>
           <td>
-            {{ facturas.multa[index].Nombre }}
+            {{ data.multa.Nombre }}
           </td>
           <td>
-            {{ facturas.user[index].nombre }}
+            {{ data.user.nombre }}
           </td>
           <td class="is-hidden-mobile">
-            {{ factura.Fecha_Emision.split('T')[0].split('-').reverse().join('-') }}
+            {{ data.factura.Fecha_Emision.split('T')[0].split('-').reverse().join('-') }}
           </td>
           <td class="is-hidden-mobile">
-            Bs.S {{ facturas.multa[index].Precio }}
+            Bs.S {{ data.multa.Precio }}
           </td>
           <td>
-            <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
-            <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activa'">Multa activa</span>
-            <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">Pagada</span>
+            <span class="tag is-warning" v-if="data.factura.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
+            <span class="tag is-danger" v-if="data.factura.Estado_Factura === 'Activa'">Multa activa</span>
+            <span class="tag is-success" v-if="data.factura.Estado_Factura === 'Correcto'">Pagada</span>
           </td>
         </tr>
       </tbody>
@@ -102,7 +102,9 @@ export default {
   },
   data() {
     return {
+      search: '',
       facturas: [],
+      multasData: [],
       meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
       mesActual: new Date().toLocaleDateString().split('/')[1].split('')[0] == '0' ? new Date().toLocaleDateString().split('/')[1].split('')[1] : new Date().toLocaleDateString().split('/')[1],
       messs: '01'
@@ -112,8 +114,17 @@ export default {
     getSolicitudPago() {
       const AuthStr = 'Bearer '.concat(this.token);
       axios.get('http://localhost:3001/facturas', {headers: {Authorization: AuthStr}}).then(response => {
-        console.log(response)
-        this.facturas = response.data
+        for(let i = 0; i < response.data.factura.length; i++) {
+          this.facturas.push(
+            {
+              factura: {...response.data.factura[i]},
+              multa: response.data.multa[i],
+              user: response.data.user[i]
+            }
+          )
+        }
+        console.log(this.multasData)
+        // this.facturas = response.data
       }).catch(error => {
         console.error(error);
       });
@@ -123,7 +134,12 @@ export default {
     ...mapGetters({
       profileData: 'stateProfile',
       token: 'isAuthenticated'
-    })
+    }),
+    filterUser() {
+      return this.facturas.filter((factura) => {
+        return factura.user.nombre.toLowerCase().includes(this.search.toLowerCase());
+      });
+    }
   }
 }
 </script>

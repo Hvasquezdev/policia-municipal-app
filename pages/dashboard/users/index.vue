@@ -13,7 +13,7 @@
           <router-link to="/dashboard/users/nuevo" class="button is-success">Registrar usuario</router-link>
         </p>
 
-        <div class="level-item is-hidden-tablet-only">
+        <div class="level-item">
           <div class="field">
             <p class="control">
               <input class="input" type="text" placeholder="Buscar: Nombre" v-model="search">
