@@ -27,7 +27,7 @@
         </div>
         
         <div class="level-item">
-          <button class="button is-success" disabled>Generar PDF</button>
+          <button class="button is-success" @click="generatePDF">Generar PDF</button>
         </div>
       </div>
     </nav>
@@ -129,6 +129,9 @@ export default {
         console.error(error);
       });
     },
+    generatePDF() {
+      this.$myInjectedFunction()
+    }
   },
   computed: {
     ...mapGetters({

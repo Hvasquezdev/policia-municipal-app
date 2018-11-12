@@ -27,7 +27,8 @@ module.exports = {
    */
   plugins: [
     '~/plugins/vue-scrollto',
-    '~/plugins/vee-validate'
+    '~/plugins/vee-validate',
+    {src: '~/plugins/vue-jspdf',  ssr: false}
   ],
   /*
   ** Build configuration
