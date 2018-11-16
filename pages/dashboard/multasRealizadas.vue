@@ -32,7 +32,7 @@
       </div>
     </nav>
 
-    <table class="table is-hoverable is-fullwidth" v-if="facturas">
+    <table class="table is-hoverable is-fullwidth" id="multasTable" v-if="facturas">
       <thead>
         <tr>
           <th>ID</th>
@@ -130,7 +130,7 @@ export default {
       });
     },
     generatePDF() {
-      this.$myInjectedFunction()
+      this.$myInjectedFunction(this.facturas)
     }
   },
   computed: {
