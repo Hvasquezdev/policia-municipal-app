@@ -3,12 +3,6 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 Vue.prototype.$myInjectedFunction = (facturas) => {
-  // let pdfName = 'Rerporte mensual'; 
-  // let texto = []
-  // facturas.forEach(element => {
-  //   texto.push(element.multa.Nombre)
-  // });
-
   let doc = new jsPDF('p', 'pt');
   let columns = [
 		{title: "ID", dataKey: "id"},
@@ -18,10 +12,8 @@ Vue.prototype.$myInjectedFunction = (facturas) => {
     {title: "Precio", dataKey: "precio"},
     {title: "Estado", dataKey: "estado"}
 	];
-	let rows = [];
-
-  console.log(facturas)
-
+  let rows = [];
+  
   facturas.forEach((element, index) => {
     rows.push(
       {
@@ -34,9 +26,6 @@ Vue.prototype.$myInjectedFunction = (facturas) => {
       }
     );
   });
-
-
-
 	doc.autoTable(columns, rows);
 	doc.save('teste.pdf');
 }
