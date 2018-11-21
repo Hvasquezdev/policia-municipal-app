@@ -40,12 +40,20 @@
               Multas Registradas
             </nuxt-link>
           </li>
-          <li>
+          <li v-if="tokenData.rol === 'Administrador'">
             <nuxt-link to="/dashboard/multasRealizadas" exact-active-class="is-active">
               <span class="icon">
                 <i class="far fa-list-alt"></i>
               </span>
               Multas Realizadas
+            </nuxt-link>
+          </li>
+          <li v-if="tokenData.rol === 'Usuario'">
+            <nuxt-link to="/dashboard/multasRecibidas" exact-active-class="is-active">
+              <span class="icon">
+                <i class="far fa-list-alt"></i>
+              </span>
+              Multas Recibidas
             </nuxt-link>
           </li>
         </ul>

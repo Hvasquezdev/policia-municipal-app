@@ -34,7 +34,7 @@
                     <span>Multa de {{ solicitudPagoMultas.multa[index].Nombre }}</span>
                   </p>
                   <small>
-                    Multado el {{ multa.Fecha_Emision }}
+                    Multado el: {{ multa.Fecha_Emision.split('T')[0].split('-').reverse().join('-') }}
                   </small>
                 </div>
               </div>
@@ -48,14 +48,14 @@
               </div>
             </div>
   
-            <a class="button is-success is-fullwidth" href="#" @click="toggleModal(solicitudPagoMultas.user[index])">Confirmar pago</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal({user: solicitudPagoMultas.user[index], factura: solicitudPagoMultas.factura[index].ID})">Confirmar pago</a>
           </div>
         </div>
       </div>
       
       <!-- If the user is not admin and he haves invoices show this list -->
       <div class="column is-12-tablet is-6-desktop is-4-fullhd" v-for="(factura, index) in facturaMultas.factura" :key="index" 
-            v-if="facturaMultas">
+            v-if="facturaMultas && factura.Estado_Factura !== 'Correcto'">
         <div class="card">
           <div class="card-content">
             <h3 class="title is-4">
@@ -69,7 +69,7 @@
                     <span>Multa de {{ facturaMultas.multa[index].Nombre }}</span>
                   </p>
                   <small>
-                    Multado el fecha {{ factura.Fecha_Emision }}
+                    Multado el: {{ factura.Fecha_Emision.split('T')[0].split('-').reverse().join('-') }}
                   </small>
                 </div>
               </div>
@@ -78,14 +78,19 @@
                   <p class="title is-5 is-marginless">
                     Bs.S {{ facturaMultas.multa[index].Precio }}
                   </p>
-                  <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
+                  <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">Pendiente</span>
                   <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activa'">Multa activa</span>
+                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Error'">Error de pago</span>
                   <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">Pagada</span>
                 </div>
               </div>
             </div>
+        
+            <div class="content">
+              <strong>Mensaje: </strong>{{ factura.mensaje }}
+            </div>
   
-            <a class="button is-success is-fullwidth" href="#" @click="toggleModal" v-if="factura.Estado_Factura === 'Activa'">Pagar Multa</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal(factura.ID)" v-if="factura.Estado_Factura === 'Activa' || factura.Estado_Factura === 'Error'">Pagar Multa</a>
             <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Correcto'" disabled>Multa Pagada</a>
             <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Pendiente'" disabled>Comprobante enviado</a>
           </div>
@@ -98,7 +103,7 @@
         </h3>
       </div>
 
-      <div class="column is-12" v-if="!facturaMultas[0] && profileData.rol === 'Usuario'">
+      <div class="column is-12" v-if="!facturaMultas.factura[0] && profileData.rol === 'Usuario'">
         <h3 class="subtitle is-4 has-text-grey">
           No tienes multas activas
         </h3>
@@ -149,7 +154,7 @@ export default {
     getFacturas() {
       const AuthStr = 'Bearer '.concat(this.token);
       const ID = this.profileData.sub;
-      axios.get(`http://localhost:3001/facturas/${ID}`, {headers: {Authorization: AuthStr}}).then(response => {
+      axios.get(`http://localhost:3001/facturasPendiente/${ID}`, {headers: {Authorization: AuthStr}}).then(response => {
         console.log(response)
         this.facturaMultas = response.data;
       }).catch(error => {

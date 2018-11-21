@@ -31,7 +31,7 @@
             <div class="control">
               <div class="tags has-addons">
                 <span class="tag is-success is-medium">Usuario</span>
-                <span class="tag is-dark is-medium">{{ data.nombre }} {{ data.apellido }}</span>
+                <span class="tag is-dark is-medium" v-if="data">{{ data.user.nombre }} {{ data.user.apellido }}</span>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default {
     },
     getComprobante() {
       const AuthStr = 'Bearer '.concat(this.token);
-      const ID = this.data.ID;
+      const ID = this.data.user.ID;
       let comprobante = this.comprobanteValue;
     
       axios.get(`http://localhost:3001/pago/${ID}`, {headers: {Authorization: AuthStr}}).then(response => {        
@@ -96,7 +96,7 @@ export default {
     },
     confirmarPago() { // TODO: Set this method in the store
       const AuthStr = 'Bearer '.concat(this.token);
-      const ID = this.data.ID;
+      const ID = this.data.factura;
       axios.put(`http://localhost:3001/factura/${ID}`, {headers: {Authorization: AuthStr}, estado: 'Correcto'}).then(response => {        
         console.log(response);
         if(response.status == 200) { // TODO: add animation for success status
@@ -111,11 +111,12 @@ export default {
       const AuthStr = 'Bearer '.concat(this.token);
       const pago = {
         userID: this.user.sub,
-        comprobante: this.pagoInfo
+        comprobante: this.pagoInfo,
+        facturaID: this.data
       }
       axios.post('http://localhost:3001/pago', {headers: {Authorization: AuthStr}, pago}).then(response => {        
         if(response.status == 200) {
-          axios.put(`http://localhost:3001/factura/${pago.userID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
+          axios.put(`http://localhost:3001/factura/${pago.facturaID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
             console.log(response);
             if(response.status == 200) { // TODO: add animation for success status
               alert('Comprobante enviado correctamente')
