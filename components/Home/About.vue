@@ -6,15 +6,17 @@
         <div class="column is-12">
           <div class="blog-card is-width-100">
             <div class="meta">
-              <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-1.jpg)"></div>
+              <div class="photo about1"></div>
             </div>
             <div class="description">
               <h2 class="has-text-weight-bold">Reseña historica de la institucion</h2>
               <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus nisi vitae voluptates. Beatae voluptates fugit cumque, 
-                deleniti rem eos maxime commodi dolores obcaecati laudantium fuga sunt aspernatur laborum nostrum, ratione minus eaque officiis pariatur, 
-                ipsam suscipit. Rem suscipit eius sed maxime atque error ducimus aliquam explicabo molestias tenetur eaque minima illum autem debitis adipisci at unde, 
-                delectus incidunt, dolor reprehenderit accusamus odio. Necessitatibus, deserunt tempora. Dolor ab dolore nostrum recusandae fugit quibusdam.
+                El Instituto Autónomo de Policia del Municipio Heres se denomina Patrulleros de Angostura,
+                creado mediante Ordenanza Municipal sancionada por el consejo municipal de Heres el 26 de septiembre del 2002. Esta es una insitución armada,
+                de carácter civil, obediente y profesional, lo cual se manifiesta funcionalmente en su mando, personal, 
+                dirección, estructura, cultura, estrategias, tacticas, equipamiento y dotacion. Siendo su finción 
+                mantener la paz social, la seguridad de las personas y los bienes y, en general, velar por el acatamiento 
+                del ordenamiento juridico nacional estadal y municipal y los principios fundamentales de la convivencia social.
               </p>
             </div>
           </div>
@@ -23,7 +25,7 @@
         <div class="column is-12">
           <div class="blog-card alt is-width-100">
             <div class="meta">
-              <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
+              <div class="photo about2"></div>
             </div>
             <div class="description">
               <h2 class="has-text-weight-bold">Mision</h2>
@@ -39,7 +41,7 @@
         <div class="column is-12">
           <div class="blog-card is-width-100">
             <div class="meta">
-              <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
+              <div class="photo about3"></div>
             </div>
             <div class="description">
               <h2 class="has-text-weight-bold">Vision</h2>
@@ -122,6 +124,18 @@ $color_grey_dark: #a2a2a2;
     background-size: cover;
     background-position: center;
     transition: transform .2s;
+  }
+
+  .about1 {
+    background-image: url('~/static/about1.jpg') !important;
+  }
+
+  .about2 {
+    background-image: url('~/static/about2.jpg') !important;
+  }
+
+  .about3 {
+    background-image: url('~/static/about3.jpg') !important;
   }
 
   .description {

@@ -69,7 +69,7 @@
               </div>
                 <p class="has-text-weight-semibold">
                   <nuxt-link to="/register" class="has-text-warning">Registrate</nuxt-link> &nbsp;·&nbsp;
-                  <a href="#" class="has-text-warning">Recuperar Contraseña</a> &nbsp;·&nbsp;
+                  <!-- <a href="#" class="has-text-warning">Recuperar Contraseña</a> &nbsp;·&nbsp; -->
                   <nuxt-link to="/" class="has-text-warning">Volver al Inicio</nuxt-link>
                 </p>
             </div>

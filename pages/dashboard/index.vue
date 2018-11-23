@@ -80,7 +80,7 @@
                   </p>
                   <span class="tag is-warning" v-if="factura.Estado_Factura === 'Pendiente'">Pendiente</span>
                   <span class="tag is-danger" v-if="factura.Estado_Factura === 'Activa'">Multa activa</span>
-                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Error'">Error de pago</span>
+                  <span class="tag is-danger" v-if="factura.Estado_Factura === 'Rechazado'">Rechazado</span>
                   <span class="tag is-success" v-if="factura.Estado_Factura === 'Correcto'">Pagada</span>
                 </div>
               </div>
@@ -90,7 +90,7 @@
               <strong>Mensaje: </strong>{{ factura.mensaje }}
             </div>
   
-            <a class="button is-success is-fullwidth" href="#" @click="toggleModal(factura.ID)" v-if="factura.Estado_Factura === 'Activa' || factura.Estado_Factura === 'Error'">Pagar Multa</a>
+            <a class="button is-success is-fullwidth" href="#" @click="toggleModal({ID: factura.ID, estado: factura.Estado_Factura})" v-if="factura.Estado_Factura === 'Activa' || factura.Estado_Factura === 'Rechazado'">Pagar Multa</a>
             <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Correcto'" disabled>Multa Pagada</a>
             <a class="button disabled is-fullwidth" href="#" v-if="factura.Estado_Factura === 'Pendiente'" disabled>Comprobante enviado</a>
           </div>
@@ -103,7 +103,7 @@
         </h3>
       </div>
 
-      <div class="column is-12" v-if="!facturaMultas.factura[0] && profileData.rol === 'Usuario'">
+      <div class="column is-12" v-if="!facturaMultas.factura && profileData.rol === 'Usuario'">
         <h3 class="subtitle is-4 has-text-grey">
           No tienes multas activas
         </h3>
@@ -112,7 +112,8 @@
       <modal-component :show="showModal" 
                         :user="profileData" 
                         :data="modalData"
-                        v-on:toggle="toggleModal"/>
+                        v-on:toggle="toggleModal"
+                        v-on:sendData="toggleModalWithReload"/>
     </div>
   </div>
 </template>
@@ -166,6 +167,17 @@ export default {
       if(data) {
         this.modalData = data;
       }
+    }, 
+    toggleModalWithReload() {
+      if(this.profileData.rol == 'Usuario') {
+        this.facturaMultas = [];
+        this.getFacturas();
+      }
+      else if(this.profileData.rol == 'Administrador') {
+        this.solicitudPagoMultas = []
+        this.getSolicitudPago();
+      }
+      this.showModal = !this.showModal;
     }
   },
   computed: {

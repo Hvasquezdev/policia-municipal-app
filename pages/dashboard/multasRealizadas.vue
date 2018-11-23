@@ -71,8 +71,9 @@
             Bs.S {{ data.multa.Precio }}
           </td>
           <td>
-            <span class="tag is-warning" v-if="data.factura.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
+            <span class="tag is-warning" v-if="data.factura.Estado_Factura === 'Pendiente'">Pendiente</span>
             <span class="tag is-danger" v-if="data.factura.Estado_Factura === 'Activa'">Multa activa</span>
+            <span class="tag is-danger" v-if="data.factura.Estado_Factura === 'Rechazado'">Rechazado</span>
             <span class="tag is-success" v-if="data.factura.Estado_Factura === 'Correcto'">Pagada</span>
           </td>
         </tr>
@@ -130,7 +131,7 @@ export default {
       });
     },
     generatePDF() {
-      this.$myInjectedFunction(this.facturas)
+      this.$myInjectedFunction(this.filterUser)
     }
   },
   computed: {

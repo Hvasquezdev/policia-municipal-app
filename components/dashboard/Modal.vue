@@ -17,6 +17,12 @@
               <button class="button is-success is-fullwidth is-large" :disabled="!pagoInfo">Enviar Comprobante</button>
             </div>
           </div>
+
+          <div class="content" v-if="message">
+            <ul>
+              <li class="has-text-success">{{ message }}</li>
+            </ul>
+          </div>
         </form>
       </div>
     </div>
@@ -52,8 +58,14 @@
             </div>
 
             <div class="control is-expanded">
-              <button class="button is-danger is-fullwidth is-medium" :disabled="!comprobante">Rechazar Pago</button>
+              <a @click="rechazarPago" class="button is-danger is-fullwidth is-medium" :disabled="!comprobante">Rechazar Pago</a>
             </div>
+          </div>
+
+          <div class="content" v-if="message">
+            <ul>
+              <li class="has-text-success">{{ message }}</li>
+            </ul>
           </div>
         </form>
       </div>
@@ -71,12 +83,16 @@ export default {
   data() {
     return {
       comprobanteValue: null,
-      pagoInfo: null
+      pagoInfo: null,
+      message: ''
     };
   },
   methods: {
     closeModal() {
       this.$emit('toggle');
+    },
+    closeModalWithReload() {
+      this.$emit('sendData');
     },
     getComprobante() {
       const AuthStr = 'Bearer '.concat(this.token);
@@ -98,10 +114,27 @@ export default {
       const AuthStr = 'Bearer '.concat(this.token);
       const ID = this.data.factura;
       axios.put(`http://localhost:3001/factura/${ID}`, {headers: {Authorization: AuthStr}, estado: 'Correcto'}).then(response => {        
-        console.log(response);
         if(response.status == 200) { // TODO: add animation for success status
-          alert('Pago confirmado correctamente')
-          this.$router.push('/dashboard');
+          this.message = 'Pago confirmado correctamente';
+          setTimeout(() => {
+            this.closeModalWithReload();
+            this.message = ''
+          }, 1000);
+        }
+      }).catch(error => {
+        console.error(error);
+      });
+    },
+    rechazarPago() { // TODO: Set this method in the store
+      const AuthStr = 'Bearer '.concat(this.token);
+      const ID = this.data.factura;
+      axios.put(`http://localhost:3001/factura/${ID}`, {headers: {Authorization: AuthStr}, estado: 'Rechazado'}).then(response => {        
+        if(response.status == 200) { // TODO: add animation for success status
+          this.message = 'Pago rechazado correctamente';
+          setTimeout(() => {
+            this.closeModalWithReload();
+            this.message = ''
+          }, 1000);
         }
       }).catch(error => {
         console.error(error);
@@ -112,23 +145,46 @@ export default {
       const pago = {
         userID: this.user.sub,
         comprobante: this.pagoInfo,
-        facturaID: this.data
+        facturaID: this.data.ID
       }
-      axios.post('http://localhost:3001/pago', {headers: {Authorization: AuthStr}, pago}).then(response => {        
-        if(response.status == 200) {
-          axios.put(`http://localhost:3001/factura/${pago.facturaID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
-            console.log(response);
-            if(response.status == 200) { // TODO: add animation for success status
-              alert('Comprobante enviado correctamente')
-              this.$router.push('/dashboard');
-            }
-          }).catch(error => {
-            console.error(error);
-          });
-        }
-      }).catch(error => {
-        console.error(error);
-      });
+
+      if(this.data.estado == 'Rechazado') {
+        axios.put(`http://localhost:3001/pago/${pago.facturaID}`, {headers: {Authorization: AuthStr}, comprobante: pago.comprobante}).then(response => {        
+          if(response.status == 200) { // TODO: add animation for success status
+            axios.put(`http://localhost:3001/factura/${pago.facturaID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
+              if(response.status == 200) { // TODO: add animation for success status
+                this.message = 'Comprobante enviado correctamente';
+                setTimeout(() => {
+                  this.closeModalWithReload();
+                  this.message = ''
+                }, 1000);
+              }
+            }).catch(error => {
+              console.error(error);
+            });
+          }
+        }).catch(error => {
+          console.error(error);
+        });        
+      } else {
+        axios.post('http://localhost:3001/pago', {headers: {Authorization: AuthStr}, pago}).then(response => {        
+          if(response.status == 200) {
+            axios.put(`http://localhost:3001/factura/${pago.facturaID}`, {headers: {Authorization: AuthStr}, estado: 'Pendiente'}).then(response => {        
+              if(response.status == 200) { // TODO: add animation for success status
+                this.message = 'Comprobante enviado correctamente';
+                setTimeout(() => {
+                  this.closeModalWithReload();
+                  this.message = ''
+                }, 1000);
+              }
+            }).catch(error => {
+              console.error(error);
+            });
+          }
+        }).catch(error => {
+          console.error(error);
+        });
+      }
     }
   },
   computed: {

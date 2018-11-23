@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class=" multas-section">
   <div class="hero is-success has-background-grey-dark">
     <div class="hero-body">
       <div class="container">
@@ -19,55 +19,15 @@
       <div class="column is-12">
         <div class="pricing-table is-horizontal">
 
-          <div class="pricing-plan is-dark table-active border">
-            <div class="plan-header">Nombre de la multa</div>
+          <div class="pricing-plan is-dark table-active border" v-for="(multa, index) in multas" :key="index">
+            <div class="plan-header">{{ multa.Nombre }}</div>
             <div class="plan-items">
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
+              <p>
+                {{ multa.Descripcion }}
+              </p>
             </div>
             <div class="plan-footer">
-              <div class="plan-price"><span class="plan-price-amount"><span class="plan-price-currency">Bs.s</span>10</span></div>
-            </div>
-          </div>
-
-          <div class="pricing-plan is-dark table-active border">
-            <div class="plan-header">Nombre de la multa</div>
-            <div class="plan-items">
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-            </div>
-            <div class="plan-footer">
-              <div class="plan-price"><span class="plan-price-amount"><span class="plan-price-currency">Bs.s</span>10</span></div>
-            </div>
-          </div>
-
-          <div class="pricing-plan is-dark table-active border">
-            <div class="plan-header">Nombre de la multa</div>
-            <div class="plan-items">
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-            </div>
-            <div class="plan-footer">
-              <div class="plan-price"><span class="plan-price-amount"><span class="plan-price-currency">Bs.s</span>10</span></div>
-            </div>
-          </div>
-
-          <div class="pricing-plan is-dark table-active border">
-            <div class="plan-header">Nombre de la multa</div>
-            <div class="plan-items">
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-              <div class="plan-item">Caracteristica</div>
-            </div>
-            <div class="plan-footer">
-              <div class="plan-price"><span class="plan-price-amount"><span class="plan-price-currency">Bs.s</span>10</span></div>
+              <div class="plan-price"><span class="plan-price-amount"><span class="plan-price-currency">Bs.s</span>{{ multa.Precio }}</span></div>
             </div>
           </div>
 
@@ -77,6 +37,32 @@
   </div>
 </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  mounted() {
+    this.getMultas();
+  },
+  data() {
+    return {
+      multas: []
+    }
+  },
+  methods: {
+    getMultas() {
+      const URL = 'http://localhost:3001/multas';
+      axios.get(URL).then(response => {
+        this.multas = response.data;
+      }).catch(error => {
+        console.error(error);
+      }); 
+    }
+  }
+}
+</script>
+
 
 <style scoped>
 @import '~/assets/css/multas.css';
@@ -90,5 +76,16 @@
 
 .mb-5 {
   margin-bottom: 5rem;
+}
+
+.multas-section {
+  background: radial-gradient(circle, #d7d7d7, #d7d7d7 1px, #fff 0, #fff);
+  background-size: 28px 28px;
+}
+
+.plan-items {
+  display: flex !important; 
+  justify-content: center;
+  align-items: center;
 }
 </style>

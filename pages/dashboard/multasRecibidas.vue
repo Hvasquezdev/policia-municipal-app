@@ -1,36 +1,15 @@
 <template>
   <div class="column is-fullwidth">
     <h1 class="title">Lista de multas recibidas</h1>
-    <nav class="level">
+    <!-- <nav class="level">
       <div class="level-left">
-        <div class="level-item">
-          <p class="subtitle">
-            Buscar multa
-          </p>
-        </div>
-
-        <div class="level-item">
-          <div class="field">
-            <p class="control">
-              <input class="input" type="text" placeholder="Usuario" disabled v-model="search">
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">
-          <div class="select">
-            <select >
-              <option v-for="(mes, index) in meses" :key="index" :value="index+1">{{ mes }}</option>
-            </select>
-          </div>
-        </div>
-        
         <div class="level-item">
           <button class="button is-success" @click="generatePDF">Generar PDF</button>
         </div>
       </div>
-    </nav>
+      <div class="level-right">
+      </div>
+    </nav> -->
 
     <table class="table is-hoverable is-fullwidth" id="multasTable" v-if="facturas">
       <thead>
@@ -66,8 +45,9 @@
             Bs.S {{ facturas.multa[index].Precio }}
           </td>
           <td>
-            <span class="tag is-warning" v-if="data.Estado_Factura === 'Pendiente'">Pendiente por revisar</span>
+            <span class="tag is-warning" v-if="data.Estado_Factura === 'Pendiente'">Pendiente</span>
             <span class="tag is-danger" v-if="data.Estado_Factura === 'Activa'">Multa activa</span>
+            <span class="tag is-danger" v-if="data.Estado_Factura === 'Rechazado'">Rechazado</span>
             <span class="tag is-success" v-if="data.Estado_Factura === 'Correcto'">Pagada</span>
           </td>
         </tr>
@@ -123,12 +103,7 @@ export default {
     ...mapGetters({
       profileData: 'stateProfile',
       token: 'isAuthenticated'
-    }),
-    // filterUser() {
-    //   return this.facturas.filter((factura) => {
-    //     return factura.user.nombre.toLowerCase().includes(this.search.toLowerCase());
-    //   });
-    // }
+    })
   }
 }
 </script>
